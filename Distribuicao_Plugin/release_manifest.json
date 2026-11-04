@@ -1,0 +1,9 @@
+{
+  "name": "Cherry Motion Studio",
+  "version": "2.1.1",
+  "build": 1793747792320,
+  "releaseDate": "2026-11-03",
+  "releaseNotes": "v2.1.1: Build oficial assinado com suporte a Auto-Update OTA e sincronização em tempo real.",
+  "filesCount": 6,
+  "bundleSha256": "70d55192ac41fd96c30b88a8bac99b05fbcc4450b135a11172d12ee640724877"
+}
