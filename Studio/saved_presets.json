@@ -1,0 +1,145 @@
+{
+  "viral/kinetic_slam": {
+    "top": {
+      "text": "naaa"
+    },
+    "slam": {
+      "text": "waaa",
+      "charColors": {
+        "0": "#FF2E7E",
+        "1": "#FF2E7E",
+        "2": "#FF2E7E",
+        "3": "#FF2E7E"
+      }
+    }
+  },
+  "hook/stack_hero": {
+    "line1": {
+      "text": "VOCÊ NÃO É"
+    },
+    "line2": {
+      "text": "✦ LINCE NEM CREATORS ✦"
+    },
+    "hero": {
+      "text": "MAS QUER COMPRAR",
+      "dx": 0,
+      "dy": 17
+    },
+    "line4": {
+      "color": "#ff8800",
+      "text": "COLA POR 1 R$?",
+      "scale": 1.26,
+      "dy": 32,
+      "dx": 5
+    },
+    "panel": {
+      "visible": false
+    }
+  },
+  "haute/05a": {
+    "script": {
+      "text": "Especial",
+      "dx": 22
+    },
+    "serif": {
+      "text": "Desconto",
+      "size": 90
+    }
+  },
+  "element/slash": {},
+  "element/count_up": {},
+  "hook/compact": {},
+  "hook/widescreen": {
+    "panel": {
+      "visible": false
+    }
+  },
+  "haute/05b": {},
+  "haute/05c": {
+    "serif": {
+      "text": "ALTA daaaa",
+      "font": "Cinzel",
+      "size": 54,
+      "color": "#EBE7DF",
+      "weight": 700,
+      "visible": true
+    },
+    "script": {
+      "text": "perfeita",
+      "font": "Pinyon Script",
+      "size": 120,
+      "color": "#D4AF37",
+      "weight": 600,
+      "visible": true
+    },
+    "swash": {
+      "stroke": "#D4AF37",
+      "w": 340,
+      "visible": true
+    },
+    "spark": {
+      "fill": "#FFFFFF",
+      "w": 10,
+      "visible": true
+    }
+  },
+  "haute/05d": {},
+  "viral/pill_box": {
+    "w1": {
+      "text": "sakfopafjajpajfopaj",
+      "start": 1.15
+    }
+  },
+  "viral/luxury_script": {},
+  "element/pop": {},
+  "element/highlighter": {},
+  "element/stamp": {},
+  "element/lower_third": {},
+  "hook/dilemma_clash": {
+    "panel": {
+      "visible": false
+    },
+    "script_connector": {
+      "font": "Great Vibes"
+    }
+  },
+  "hook/frameless_kinetic": {
+    "line1": {
+      "color": "#ffaa00",
+      "text": "É a nossa primeira",
+      "scale": 0.78,
+      "dy": 7
+    },
+    "swash": {
+      "visible": true,
+      "dx": -231,
+      "dy": -53,
+      "speed": 1.75
+    },
+    "hero": {
+      "text": "naaa",
+      "visible": false,
+      "charColors": {
+        "3": "#FFD166",
+        "4": "#8066ff",
+        "5": "#FFD166"
+      }
+    },
+    "prefix": {
+      "text": "Live SHOP",
+      "dy": -31,
+      "scale": 1.24
+    }
+  },
+  "hook/horizon_split_hero": {},
+  "hook/y_lash_precision": {},
+  "text_anim/karaoke_bounce": {},
+  "text_anim/sliding_pill": {},
+  "text_anim/blur_glow_in": {},
+  "text_anim/kinetic_stack": {},
+  "text_anim/clean_callout": {},
+  "text_anim/typewriter_neon": {},
+  "text_anim/wave_kinetic": {},
+  "text_anim/split_reveal": {},
+  "viral/snap_pop": {}
+}
