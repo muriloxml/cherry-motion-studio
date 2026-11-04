@@ -491,37 +491,39 @@
         </div>
       </div>
 
-      <!-- Advanced: Remote URL & Publisher Tools -->
-      <details class="text-xs text-gray-400 group">
-        <summary class="cursor-pointer text-[11px] text-[#DFC89D] hover:text-[#FFD166] font-semibold py-1">
-          ⚙️ Ferramentas de Distribuição & Configurações Avançadas
-        </summary>
-        <div class="mt-2.5 p-3.5 rounded-xl bg-[#0E0308] border border-[#2B0E1E] flex flex-col gap-3">
-          <div>
-            <label class="block text-[10px] uppercase font-mono text-gray-500 mb-1">URL de Atualização Remota (GitHub Raw / Gist / Nuvem):</label>
-            <div class="flex gap-2">
-              <input type="text" id="inpRemoteUrl" placeholder="https://raw.githubusercontent.com/.../release_manifest.json" class="flex-1 px-2.5 py-1.5 rounded-lg bg-[#14050E] border border-[#381126] text-xs text-[#DFC89D] focus:border-[#FFD166] outline-none">
-              <button onclick="saveOtaConfig()" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166]">Salvar</button>
+      <!-- Advanced: Creator / Publisher Tools (Visível apenas na máquina do desenvolvedor) -->
+      <div id="otaDevToolsSection" style="display: none;">
+        <details class="text-xs text-gray-400 group">
+          <summary class="cursor-pointer text-[11px] text-[#DFC89D] hover:text-[#FFD166] font-semibold py-1">
+            👑 Painel do Criador (Publicar Versões no GitHub)
+          </summary>
+          <div class="mt-2.5 p-3.5 rounded-xl bg-[#0E0308] border border-[#2B0E1E] flex flex-col gap-3">
+            <div>
+              <label class="block text-[10px] uppercase font-mono text-gray-500 mb-1">Repositório GitHub Oficial (Somente Leitura para Clientes):</label>
+              <div class="flex gap-2">
+                <input type="text" id="inpRemoteUrl" placeholder="https://raw.githubusercontent.com/.../release_manifest.json" class="flex-1 px-2.5 py-1.5 rounded-lg bg-[#14050E] border border-[#381126] text-xs text-[#DFC89D] focus:border-[#FFD166] outline-none">
+                <button onclick="saveOtaConfig()" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166]">Salvar</button>
+              </div>
             </div>
-          </div>
 
-          <div class="border-t border-[#1F0715] pt-2.5">
-            <span class="block text-[10px] uppercase font-mono text-gray-500 mb-1.5">Publicar Nova Versão (Criador / Editor):</span>
-            <p class="text-[11px] text-gray-400 mb-2">Gera o arquivo oficial <code class="text-[#FFD166]">.ZXP</code> assinado com Adobe ZXPSignCmd e cria o pacote delta OTA em <code class="text-gray-300">Distribuicao_Plugin/</code>.</p>
-            <div class="flex items-center gap-2">
-              <button onclick="publishNewOtaVersion('patch')" id="btnPubPatch" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
-                Incrementar Patch (+0.0.1)
-              </button>
-              <button onclick="publishNewOtaVersion('minor')" id="btnPubMinor" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
-                Incrementar Minor (+0.1.0)
-              </button>
-              <button onclick="openFolder('dist')" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166] ml-auto">
-                📁 Ver Pasta Distribuição
-              </button>
+            <div class="border-t border-[#1F0715] pt-2.5">
+              <span class="block text-[10px] uppercase font-mono text-gray-500 mb-1.5">Publicar Nova Versão no GitHub (Criador Oficial):</span>
+              <p class="text-[11px] text-gray-400 mb-2">Gera o pacote <code class="text-[#FFD166]">.ZXP</code> assinado e envia para <code class="text-gray-300">muriloxml/cherry-motion-studio</code> no GitHub.</p>
+              <div class="flex items-center gap-2">
+                <button onclick="publishNewOtaVersion('patch')" id="btnPubPatch" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
+                  Incrementar Patch (+0.0.1)
+                </button>
+                <button onclick="publishNewOtaVersion('minor')" id="btnPubMinor" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
+                  Incrementar Minor (+0.1.0)
+                </button>
+                <button onclick="openFolder('dist')" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166] ml-auto">
+                  📁 Ver Pasta Distribuição
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </details>
+        </details>
+      </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-[#240A17] text-xs">
         <span class="text-gray-500 font-mono text-[10px]" id="otaCheckTimeText">Última checagem: verificando...</span>
@@ -530,8 +532,14 @@
     </div>
   </div>
 
-  <script src="/engine.js"></script>
+  <script src="./lib/CSInterface.js" onerror="console.log('CSInterface not present in browser mode')"></script>
+  <script src="./engine.js"></script>
   <script>
+    const IS_CEP = typeof window.__adobe_cep__ !== 'undefined' || typeof CSInterface !== 'undefined';
+    let csInterface = null;
+    if (IS_CEP && typeof CSInterface !== 'undefined') {
+      try { csInterface = new CSInterface(); } catch(e) { console.warn('CSInterface init:', e); }
+    }
     const E = window.CherryEngine;
     const SUITES = E.SUITES;
     const canvas = document.getElementById('previewCanvas');
@@ -565,6 +573,17 @@
       try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {}
       clearTimeout(saveTimer);
       saveTimer = setTimeout(() => {
+        if (typeof window.require === 'function') {
+          try {
+            const fs = window.require('fs');
+            const path = window.require('path');
+            let extDir = (csInterface && csInterface.getSystemPath) ? csInterface.getSystemPath(SystemPath.EXTENSION) : '';
+            if (!extDir && typeof __dirname !== 'undefined') extDir = __dirname;
+            if (extDir) {
+              fs.writeFileSync(path.join(extDir, 'saved_presets.json'), JSON.stringify(store, null, 2), 'utf8');
+            }
+          } catch(e){}
+        }
         fetch('/api/presets', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1271,6 +1290,10 @@
           window.__adobe_cep__.evalScript(script, (raw) => {
             try { resolve(JSON.parse(raw)); } catch (e) { resolve({ data: raw }); }
           });
+        } else if (csInterface && csInterface.evalScript) {
+          csInterface.evalScript(script, (raw) => {
+            try { resolve(JSON.parse(raw)); } catch (e) { resolve({ data: raw }); }
+          });
         } else if (window.parent && window.parent !== window) {
           const reqId = 'eval_' + Date.now() + '_' + Math.random();
           const handler = (ev) => {
@@ -1292,17 +1315,8 @@
     }
 
     async function checkPremiere() {
-      try {
-        const res = await fetch('/api/premiere-status');
-        const data = await res.json();
-        if (data && !data.offline && data.hasSeq !== undefined) {
-          applyPremiereStatusUI(data);
-          return;
-        }
-      } catch (e) {}
-
-      // Fallback via ExtendScript directly in CEP
-      if (window.__adobe_cep__ || (window.parent && window.parent !== window)) {
+      // 1. Direct CEP check (instant, 0ms, zero server dependency)
+      if (window.__adobe_cep__ || csInterface || (window.parent && window.parent !== window)) {
         try {
           const direct = await evalExtendScript('CherryExtendScript.getSequenceInfo()');
           let parsed = typeof direct === 'string' ? JSON.parse(direct) : direct;
@@ -1312,6 +1326,16 @@
           }
         } catch(e){}
       }
+
+      // 2. Local server fallback
+      try {
+        const res = await fetch('/api/premiere-status');
+        const data = await res.json();
+        if (data && !data.offline && data.hasSeq !== undefined) {
+          applyPremiereStatusUI(data);
+          return;
+        }
+      } catch (e) {}
 
       applyPremiereStatusUI({ offline: true, hasSeq: false });
     }
@@ -1334,6 +1358,25 @@
     }
 
     async function checkSelectedClip() {
+      // 1. Direct CEP check
+      if (window.__adobe_cep__ || csInterface || (window.parent && window.parent !== window)) {
+        try {
+          const direct = await evalExtendScript('CherryExtendScript.getSelectedClipInfo()');
+          let info = typeof direct === 'string' ? JSON.parse(direct) : direct;
+          if (info && typeof info === 'object' && info.hasSeq !== undefined) {
+            if (info.hasSelection && info.mediaPath) {
+              const base = info.mediaPath.split(/[\\/]/).pop();
+              info.isCherry = base.toLowerCase().startsWith('cherry');
+            } else if (info.hasSelection && info.clipName) {
+              info.isCherry = info.clipName.toLowerCase().startsWith('cherry');
+            }
+            updateLiveLinkUI(info);
+            return;
+          }
+        } catch(e){}
+      }
+
+      // 2. Local server fallback
       try {
         const res = await fetch('/api/selected-clip');
         const data = await res.json();
@@ -1342,33 +1385,6 @@
           return;
         }
       } catch (e) {}
-
-      // Fallback via ExtendScript directly in CEP
-      if (window.__adobe_cep__ || (window.parent && window.parent !== window)) {
-        try {
-          const direct = await evalExtendScript('CherryExtendScript.getSelectedClipInfo()');
-          let info = typeof direct === 'string' ? JSON.parse(direct) : direct;
-          if (info && typeof info === 'object' && info.hasSeq !== undefined) {
-            if (info.hasSelection && info.mediaPath) {
-              try {
-                const metaRes = await fetch('/api/clip-metadata?path=' + encodeURIComponent(info.mediaPath));
-                const metaData = await metaRes.json();
-                if (metaData && metaData.found) {
-                  info.isCherry = true;
-                  info.metadata = metaData.metadata;
-                } else {
-                  const base = info.mediaPath.split(/[\\/]/).pop();
-                  info.isCherry = base.toLowerCase().startsWith('cherrymotion');
-                }
-              } catch(e){}
-            } else if (info.hasSelection && info.clipName) {
-              info.isCherry = info.clipName.toLowerCase().startsWith('cherrymotion');
-            }
-            updateLiveLinkUI(info);
-            return;
-          }
-        } catch(e){}
-      }
 
       updateLiveLinkUI({ offline: true, hasSeq: false });
     }
@@ -1639,6 +1655,11 @@
           return result;
         }
       } catch (err) {
+        if (window.__adobe_cep__ || csInterface) {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+          statusBox.innerText = `⚡ Servidor ProRes local não detectado. Inserindo MOGRT Nativo instantâneo (0ms)...`;
+          return handleInsertMogrtClick();
+        }
         statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
         statusBox.innerText = `❌ Erro de conexão Turbo: ${err.message}`;
         return { success: false, error: err.message };
@@ -1840,6 +1861,70 @@
       } catch(e){}
     }
 
+    const MOGRT_FILE_MAP = {
+      "text_anim/karaoke_bounce": "Cherry - Karaoke Word Bounce.mogrt",
+      "text_anim/sliding_pill": "Cherry - Sliding Highlight Box.mogrt",
+      "text_anim/blur_glow_in": "Cherry - Cinematic Blur & Glow.mogrt",
+      "text_anim/kinetic_stack": "Cherry - Kinetic Typography Stack.mogrt",
+      "text_anim/clean_callout": "Cherry - Minimal Clean Callout.mogrt",
+      "text_anim/typewriter_neon": "Cherry - Typewriter Pro.mogrt",
+      "text_anim/wave_kinetic": "Cherry - Floating Wave Text.mogrt",
+      "text_anim/split_reveal": "Cherry - Split-Mask Cinematic Title.mogrt",
+      "hook/frameless_kinetic": "Cherry - #11 Kinetic Sem Caixa.mogrt",
+      "hook/horizon_split_hero": "Cherry - #10 Horizon Split-Mask.mogrt",
+      "hook/y_lash_precision": "Cherry - #09 Kinetic Focus Capsule.mogrt",
+      "hook/dilemma_clash": "Cherry - #08 Editorial Dilemma.mogrt",
+      "hook/stack_hero": "Cherry - #07B Stack Hero.mogrt",
+      "hook/compact": "Cherry - #07A Natural Compacto.mogrt",
+      "hook/widescreen": "Cherry - #07C Power Widescreen.mogrt",
+      "haute/05a": "Cherry - 05A Assinatura Cruzada.mogrt",
+      "haute/05b": "Cherry - 05B Rhode Soft Focus.mogrt",
+      "haute/05c": "Cherry - 05C Swash Ribbon.mogrt",
+      "haute/05d": "Cherry - 05D Gold Knockout.mogrt",
+      "viral/kinetic_slam": "Cherry - T3 Kinetic Slam.mogrt",
+      "viral/snap_pop": "Cherry - T1 Snap-Pop.mogrt",
+      "viral/pill_box": "Cherry - T2 Pill-Box.mogrt",
+      "viral/luxury_script": "Cherry - T4 Luxury Script.mogrt",
+      "element/pop": "Cherry - #01 Luxury Price Pop.mogrt",
+      "element/slash": "Cherry - #02 Price Slash.mogrt",
+      "element/count_up": "Cherry - #03 Count-up Odom.mogrt",
+      "element/highlighter": "Cherry - #04 Highlighter Marker.mogrt",
+      "element/stamp": "Cherry - #05 Selo Selado.mogrt",
+      "element/lower_third": "Cherry - #06 Golden Lower-Third.mogrt"
+    };
+
+    function resolveMogrtFile(payload) {
+      const k = `${payload.cat}/${payload.sub}`;
+      let fileName = payload.fileName || MOGRT_FILE_MAP[k];
+      if (!fileName && model()) fileName = `Cherry - ${model().label}.mogrt`;
+
+      let extDir = '';
+      if (window.__adobe_cep__ && csInterface && csInterface.getSystemPath) {
+        try { extDir = csInterface.getSystemPath(SystemPath.EXTENSION); } catch(e){}
+      }
+      if (!extDir && typeof __dirname !== 'undefined') extDir = __dirname;
+
+      const fs = (typeof window.require === 'function') ? window.require('fs') : null;
+      const path = (typeof window.require === 'function') ? window.require('path') : null;
+
+      if (fs && path && fileName) {
+        const candidates = [
+          extDir ? path.join(extDir, 'mogrts', 'Cherry Motions', fileName) : null,
+          extDir ? path.join(extDir, 'mogrts', fileName) : null,
+          path.join(process.env.LOCALAPPDATA || '', 'CherryMotionStudio', 'Studio', 'mogrts', 'Cherry Motions', fileName),
+          "G:\\Meu Drive\\00. MARKETING GTK\\PROJETOS EDIÇÃO\\00. APENAS EDITOR\\CHERRY MOTIONS\\Studio\\mogrts\\Cherry Motions\\" + fileName
+        ];
+        for (const c of candidates) {
+          if (c && fs.existsSync(c)) return c;
+        }
+      }
+
+      if (extDir && fileName) {
+        return (extDir.replace(/\\/g, '/') + '/mogrts/Cherry Motions/' + fileName).replace(/\/\//g, '/');
+      }
+      return fileName;
+    }
+
     let isMogrtInserting = false;
     async function handleInsertMogrtClick() {
       if (isMogrtInserting) return;
@@ -1877,12 +1962,38 @@
       };
 
       try {
-        const res = await fetch('/api/mogrts/insert', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
+        let result = null;
+        if (window.__adobe_cep__ || csInterface) {
+          const resolvedPath = resolveMogrtFile(payload);
+          const mogrtPayload = {
+            mogrtPath: resolvedPath,
+            videoTrackOffset: trackOffset,
+            audioTrackOffset: 0,
+            durationSec: durationSec,
+            clipName: payload.clipName,
+            params: params
+          };
+          const escapedPayload = JSON.stringify(mogrtPayload).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          const script = `(function() {
+            try {
+              if (typeof CherryExtendScript !== 'undefined' && CherryExtendScript.insertMogrtAtPlayhead) {
+                return CherryExtendScript.insertMogrtAtPlayhead("${escapedPayload}");
+              }
+              return JSON.stringify({ success: false, error: "CherryExtendScript não carregado no Premiere Pro." });
+            } catch(err) {
+              return JSON.stringify({ success: false, error: err.toString() });
+            }
+          })()`;
+          const raw = await evalExtendScript(script);
+          result = (typeof raw === 'string') ? JSON.parse(raw) : raw;
+        } else {
+          const res = await fetch('/api/mogrts/insert', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          result = await res.json();
+        }
 
         if (result && result.success) {
           statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
@@ -1914,12 +2025,29 @@
 
       const params = getMogrtParamsPayload();
       try {
-        const res = await fetch('/api/mogrts/update', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ params })
-        });
-        const result = await res.json();
+        let result = null;
+        if (window.__adobe_cep__ || csInterface) {
+          const escapedPayload = JSON.stringify({ params }).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          const script = `(function() {
+            try {
+              if (typeof CherryExtendScript !== 'undefined' && CherryExtendScript.updateSelectedMogrtParams) {
+                return CherryExtendScript.updateSelectedMogrtParams("${escapedPayload}");
+              }
+              return JSON.stringify({ success: false, error: "CherryExtendScript não carregado no Premiere Pro." });
+            } catch(err) {
+              return JSON.stringify({ success: false, error: err.toString() });
+            }
+          })()`;
+          const raw = await evalExtendScript(script);
+          result = (typeof raw === 'string') ? JSON.parse(raw) : raw;
+        } else {
+          const res = await fetch('/api/mogrts/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ params })
+          });
+          result = await res.json();
+        }
         if (result && result.success) {
           statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
           statusBox.innerText = `⚡ Sincronizado com sucesso!\nClipe: ${result.clipName || 'MOGRT'}\nPropriedades atualizadas: ${(result.updatedProperties || []).join(', ') || 'Texto/Cores'}`;
@@ -2032,6 +2160,28 @@
           cachedCatalog = await res.json();
         } catch(e){}
       }
+      if (!cachedCatalog || !cachedCatalog.catalog) {
+        try {
+          const res = await fetch('./mogrts/Cherry Motions/manifest.json');
+          const mf = await res.json();
+          cachedCatalog = { success: true, count: Object.keys(mf).length, catalog: mf };
+        } catch(e) {
+          const gen = {};
+          for (const cKey in SUITES) {
+            SUITES[cKey].models.forEach(m => {
+              const k = `${cKey}/${m.id}`;
+              gen[k] = {
+                key: k, cat: cKey, sub: m.id,
+                name: `Cherry - ${m.label}`,
+                fileName: MOGRT_FILE_MAP[k] || `Cherry - ${m.label}.mogrt`,
+                badge: CAT_META[cKey] ? CAT_META[cKey].label : cKey,
+                desc: m.desc || m.label
+              };
+            });
+          }
+          cachedCatalog = { success: true, count: Object.keys(gen).length, catalog: gen };
+        }
+      }
       renderCatalogUI();
     }
 
@@ -2126,21 +2276,53 @@
 
     let currentOtaCheck = null;
 
+    function isVersionNewer(remote, local) {
+      if (!remote || !local) return false;
+      const r = String(remote).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      const l = String(local).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+      for (let i = 0; i < 3; i++) {
+        if ((r[i] || 0) > (l[i] || 0)) return true;
+        if ((r[i] || 0) < (l[i] || 0)) return false;
+      }
+      return false;
+    }
+
     async function initOtaStatus() {
+      let data = null;
       try {
         const res = await fetch('/api/ota/status');
-        const data = await res.json();
-        if (data && data.version) {
-          const vText = `v${data.version} • 🔄 Auto-Update`;
-          if ($('otaVersionText')) $('otaVersionText').innerText = vText;
-          if ($('otaActiveVerLabel')) $('otaActiveVerLabel').innerText = `v${data.version}`;
-          if ($('otaBuildLabel')) $('otaBuildLabel').innerText = `(Build ${data.build || 2100})`;
-          if ($('inpRemoteUrl')) $('inpRemoteUrl').value = data.remoteManifestUrl || '';
-          if (data.lastChecked && $('otaCheckTimeText')) {
-            $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date(data.lastChecked).toLocaleTimeString();
-          }
+        data = await res.json();
+      } catch(e) {
+        try {
+          const vRes = await fetch('./version.json');
+          const vData = await vRes.json();
+          data = {
+            version: vData.version || '2.2.0',
+            build: vData.build || 2200,
+            remoteManifestUrl: 'https://raw.githubusercontent.com/muriloxml/cherry-motion-studio/main/Distribuicao_Plugin/release_manifest.json',
+            isCreator: false
+          };
+        } catch(err) {
+          data = { version: '2.2.0', build: 2200, isCreator: false };
         }
-      } catch(e) {}
+      }
+
+      if (data && data.version) {
+        const vText = `v${data.version} • 🔄 Auto-Update`;
+        if ($('otaVersionText')) $('otaVersionText').innerText = vText;
+        if ($('otaActiveVerLabel')) $('otaActiveVerLabel').innerText = `v${data.version}`;
+        if ($('otaBuildLabel')) $('otaBuildLabel').innerText = `(Build ${data.build || 2200})`;
+        if ($('inpRemoteUrl')) $('inpRemoteUrl').value = data.remoteManifestUrl || '';
+        if (data.lastChecked && $('otaCheckTimeText')) {
+          $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date(data.lastChecked).toLocaleTimeString();
+        }
+
+        // Controle de exibição seguro: criador vs usuário final
+        const devSec = $('otaDevToolsSection');
+        if (devSec) {
+          devSec.style.display = data.isCreator ? 'block' : 'none';
+        }
+      }
     }
 
     async function checkOtaUpdates(silent = false) {
@@ -2151,35 +2333,62 @@
 
       if (!silent && banner) banner.innerText = 'Buscando atualizações locais e remotas...';
 
+      let data = null;
       try {
         const res = await fetch('/api/ota/check');
-        const data = await res.json();
-        currentOtaCheck = data;
-
-        if ($('otaCheckTimeText')) $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date().toLocaleTimeString();
-
-        if (data.updateAvailable) {
-          if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
-          if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
-          if ($('otaVersionText')) $('otaVersionText').innerText = `v${data.latestVersion} Disponível! ⚡`;
-          if (banner) {
-            const srcStr = data.sourceType === 'local_drive' ? 'Disco Local / Google Drive' : 'Nuvem Remota';
-            banner.innerHTML = `<b class="text-[#FFD166]">Nova versão v${data.latestVersion} disponível!</b> (Fonte: ${srcStr})`;
-          }
-          if (changelog) {
-            changelog.innerText = data.releaseNotes || 'Melhorias de desempenho e novos recursos.';
-            changelog.classList.remove('hidden');
-          }
-          if (actionArea) actionArea.classList.remove('hidden');
-        } else {
-          if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-          if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
-          if (banner) banner.innerText = 'Você está com a versão mais recente instalada (' + (data.currentVersion ? 'v' + data.currentVersion : '') + ').';
-          if (changelog) changelog.classList.add('hidden');
-          if (actionArea) actionArea.classList.add('hidden');
-        }
+        data = await res.json();
       } catch(e) {
-        if (banner) banner.innerText = 'Falha ao verificar atualizações: ' + e.message;
+        // Checagem direta via GitHub raw para clientes standalone (sem node.exe externo)
+        try {
+          const manifestUrl = 'https://raw.githubusercontent.com/muriloxml/cherry-motion-studio/main/Distribuicao_Plugin/release_manifest.json';
+          const rRes = await fetch(manifestUrl + '?t=' + Date.now());
+          const remoteManifest = await rRes.json();
+
+          let currentVer = '2.2.0';
+          try {
+            const vRes = await fetch('./version.json');
+            const vData = await vRes.json();
+            currentVer = vData.version || currentVer;
+          } catch(err){}
+
+          const isNewer = isVersionNewer(remoteManifest.version, currentVer);
+          data = {
+            currentVersion: currentVer,
+            latestVersion: remoteManifest.version,
+            updateAvailable: isNewer,
+            releaseNotes: remoteManifest.releaseNotes,
+            sourceType: 'github_remote',
+            bundleUrl: remoteManifest.bundleUrl
+          };
+        } catch(ghErr) {
+          data = { error: ghErr.message };
+        }
+      }
+
+      currentOtaCheck = data;
+      if ($('otaCheckTimeText')) $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date().toLocaleTimeString();
+
+      if (data && data.updateAvailable) {
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+        if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+        if ($('otaVersionText')) $('otaVersionText').innerText = `v${data.latestVersion} Disponível! ⚡`;
+        if (banner) {
+          const srcStr = data.sourceType === 'local_drive' ? 'Disco Local / Google Drive' : 'Nuvem GitHub';
+          banner.innerHTML = `<b class="text-[#FFD166]">Nova versão v${data.latestVersion} disponível!</b> (Fonte: ${srcStr})`;
+        }
+        if (changelog) {
+          changelog.innerText = data.releaseNotes || 'Melhorias de desempenho e novos recursos.';
+          changelog.classList.remove('hidden');
+        }
+        if (actionArea) actionArea.classList.remove('hidden');
+      } else if (data && !data.error) {
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+        if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
+        if (banner) banner.innerText = 'Você está com a versão mais recente instalada (' + (data.currentVersion ? 'v' + data.currentVersion : '') + ').';
+        if (changelog) changelog.classList.add('hidden');
+        if (actionArea) actionArea.classList.add('hidden');
+      } else {
+        if (banner) banner.innerText = 'Falha ao verificar atualizações: ' + (data ? data.error : 'Sem conexão');
       }
     }
 
@@ -2194,20 +2403,47 @@
       if (banner) banner.innerText = 'Baixando e gravando arquivos de atualização...';
 
       try {
-        const payload = currentOtaCheck ? { sourcePath: currentOtaCheck.sourcePath } : {};
-        const res = await fetch('/api/ota/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (result.success) {
+        let result = null;
+        try {
+          const payload = currentOtaCheck ? { sourcePath: currentOtaCheck.sourcePath } : {};
+          const res = await fetch('/api/ota/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          result = await res.json();
+        } catch(netErr) {
+          // Direct client OTA unpack via embedded Node.js fs
+          if (typeof window.require === 'function') {
+            const fs = window.require('fs');
+            const path = window.require('path');
+            let extDir = (csInterface && csInterface.getSystemPath) ? csInterface.getSystemPath(SystemPath.EXTENSION) : '';
+            if (!extDir && typeof __dirname !== 'undefined') extDir = __dirname;
+
+            const bundleUrl = (currentOtaCheck && currentOtaCheck.bundleUrl) || 'https://raw.githubusercontent.com/muriloxml/cherry-motion-studio/main/Distribuicao_Plugin/ota_bundle.json';
+            const bRes = await fetch(bundleUrl + '?t=' + Date.now());
+            const bundleData = await bRes.json();
+
+            if (bundleData && bundleData.files && extDir) {
+              for (const relPath in bundleData.files) {
+                const fileInfo = bundleData.files[relPath];
+                const fullDest = path.join(extDir, relPath);
+                fs.mkdirSync(path.dirname(fullDest), { recursive: true });
+                const buf = Buffer.from(fileInfo.content, 'base64');
+                fs.writeFileSync(fullDest, buf);
+              }
+              result = { success: true, newVersion: bundleData.version };
+            }
+          }
+        }
+
+        if (result && result.success) {
           if (banner) banner.innerText = `Atualização para v${result.newVersion} concluída com sucesso! Recarregando...`;
           setTimeout(() => {
             window.location.reload();
           }, 1500);
         } else {
-          alert('Erro ao atualizar: ' + (result.error || 'Desconhecido'));
+          alert('Erro ao atualizar: ' + ((result && result.error) || 'Desconhecido'));
           if (btn) {
             btn.disabled = false;
             btn.innerText = 'Tentar Novamente';
