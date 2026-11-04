@@ -50,27 +50,36 @@ function getStudioPaths() {
   };
 }
 
+function isCreatorEnvironment() {
+  const cert1 = path.join(__dirname, 'bin', 'cherry_motion_cert.p12');
+  const cert2 = "G:\\Meu Drive\\00. MARKETING GTK\\PROJETOS EDIÇÃO\\00. APENAS EDITOR\\CHERRY MOTIONS\\Studio\\bin\\cherry_motion_cert.p12";
+  const cert3 = path.join(__dirname, 'bin', 'cherry_cert.p12');
+  return fs.existsSync(cert1) || fs.existsSync(cert2) || fs.existsSync(cert3);
+}
+
 function getVersionInfo() {
   const vPath = path.join(__dirname, 'version.json');
-  if (fs.existsSync(vPath)) {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(vPath, 'utf8'));
-      if (!parsed.remoteManifestUrl) parsed.remoteManifestUrl = DEFAULT_REMOTE_MANIFEST_URL;
-      return parsed;
-    } catch (e) {
-      console.warn('[OTA] Erro ao ler version.json:', e.message);
-    }
-  }
-  return {
+  let info = {
     name: 'Cherry Motion Studio',
-    version: '2.1.2',
-    build: 2102,
+    version: '2.1.3',
+    build: 2104,
     buildTime: new Date().toISOString(),
     channel: 'stable',
     remoteManifestUrl: DEFAULT_REMOTE_MANIFEST_URL,
     lastChecked: null,
-    changelog: 'v2.1.2: Integração nativa com GitHub para Auto-Updates OTA instantâneos.'
+    changelog: 'v2.1.3: Controle de acesso seguro Criador/Cliente e Auto-Update via GitHub.'
   };
+  if (fs.existsSync(vPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(vPath, 'utf8'));
+      info = Object.assign(info, parsed);
+    } catch (e) {
+      console.warn('[OTA] Erro ao ler version.json:', e.message);
+    }
+  }
+  if (!info.remoteManifestUrl) info.remoteManifestUrl = DEFAULT_REMOTE_MANIFEST_URL;
+  info.isCreator = isCreatorEnvironment();
+  return info;
 }
 
 function saveVersionInfo(info) {
@@ -443,6 +452,9 @@ function buildOtaBundle(options = {}) {
 
 module.exports = {
   CORE_OTA_FILES,
+  DEFAULT_REMOTE_MANIFEST_URL,
+  DEFAULT_REMOTE_BUNDLE_URL,
+  isCreatorEnvironment,
   getStudioPaths,
   getVersionInfo,
   saveVersionInfo,
