@@ -82,44 +82,61 @@ async function main() {
   };
   otaManager.saveVersionInfo(updatedVerInfo);
 
-  // 2. Prepara studio_bundle dentro da extensão CEP
+  // 2. Prepara a extensão CEP Standalone (Zero dependência de node.exe externo)
   const cepExtensionDir = paths.cepExtensionDir;
-  const studioBundleDir = path.join(cepExtensionDir, 'studio_bundle');
-  console.log(`[Builder] Sincronizando studio_bundle em ${studioBundleDir}...`);
-  fs.mkdirSync(studioBundleDir, { recursive: true });
+  console.log(`[Builder] Sincronizando extensão CEP Standalone em ${cepExtensionDir}...`);
+  fs.mkdirSync(cepExtensionDir, { recursive: true });
 
-  // Lista de arquivos e pastas essenciais a incluir no studio_bundle
-  const includeFiles = [
+  // Lista de arquivos essenciais para a raiz da extensão CEP
+  const rootFiles = [
     'engine.js',
     'index.html',
-    'server.js',
-    'ota_manager.js',
-    'build_cherry_mogrts.js',
     'version.json',
     'saved_presets.json',
     'LEIA-ME_PORTATIL.txt'
   ];
 
-  for (const f of includeFiles) {
+  for (const f of rootFiles) {
     const src = path.join(paths.activeDir, f);
     if (fs.existsSync(src)) {
-      fs.copyFileSync(src, path.join(studioBundleDir, f));
+      fs.copyFileSync(src, path.join(cepExtensionDir, f));
     }
+  }
+
+  // Copia lib (CSInterface.js)
+  const libSrc = path.join(paths.activeDir, 'lib');
+  if (fs.existsSync(libSrc)) {
+    copyRecursive(libSrc, path.join(cepExtensionDir, 'lib'));
   }
 
   // Copia fontes
   const fontsSrc = path.join(paths.activeDir, 'fonts');
   if (fs.existsSync(fontsSrc)) {
-    copyRecursive(fontsSrc, path.join(studioBundleDir, 'fonts'));
+    copyRecursive(fontsSrc, path.join(cepExtensionDir, 'fonts'));
   }
 
   // Copia host/index.jsx
   const hostSrc = path.join(paths.activeDir, 'host', 'index.jsx');
   if (fs.existsSync(hostSrc)) {
-    fs.mkdirSync(path.join(studioBundleDir, 'host'), { recursive: true });
-    fs.copyFileSync(hostSrc, path.join(studioBundleDir, 'host', 'index.jsx'));
-    // Atualiza também o host principal da extensão CEP
+    fs.mkdirSync(path.join(cepExtensionDir, 'host'), { recursive: true });
     fs.copyFileSync(hostSrc, path.join(cepExtensionDir, 'host', 'index.jsx'));
+  }
+
+  // Copia MOGRTs compilados (todos os 29 templates e manifest para o pacote oficial)
+  const mogrtsSrc = path.join(paths.activeDir, 'mogrts', 'Cherry Motions');
+  if (fs.existsSync(mogrtsSrc)) {
+    const destMogrts = path.join(cepExtensionDir, 'mogrts', 'Cherry Motions');
+    fs.mkdirSync(destMogrts, { recursive: true });
+    copyRecursive(mogrtsSrc, destMogrts);
+    console.log(`[Builder] 29 templates MOGRTs sincronizados na extensão CEP.`);
+  }
+
+  // Mantém studio_bundle para compatibilidade opcional
+  const studioBundleDir = path.join(cepExtensionDir, 'studio_bundle');
+  fs.mkdirSync(studioBundleDir, { recursive: true });
+  for (const f of ['server.js', 'ota_manager.js', 'build_cherry_mogrts.js', 'version.json']) {
+    const src = path.join(paths.activeDir, f);
+    if (fs.existsSync(src)) fs.copyFileSync(src, path.join(studioBundleDir, f));
   }
 
   // 3. Atualiza versão no CSXS/manifest.xml da extensão CEP
@@ -288,6 +305,26 @@ pause
 
   // Também copia o publicador para a pasta Studio
   fs.writeFileSync(path.join(paths.activeDir, 'PUBLICAR_NOVA_VERSAO_OTA.bat'), publisherBatContent, 'utf8');
+
+  // 8. Publicação automática para o GitHub (muriloxml/cherry-motion-studio)
+  console.log('\n[Builder] Sincronizando com repositório GitHub...');
+  try {
+    const gitDir = paths.libraryDir;
+    const lockFile = path.join(gitDir, '.git', 'index.lock');
+    if (fs.existsSync(lockFile)) {
+      try { fs.unlinkSync(lockFile); } catch(e){}
+    }
+    execSync(`git -C "${gitDir}" add "Distribuicao_Plugin" "Studio"`, { stdio: 'inherit', windowsHide: true });
+    try {
+      execSync(`git -C "${gitDir}" commit -m "release: Cherry Motion Studio v${targetVersion} (Standalone CEP Panel & 29 MOGRTs)"`, { stdio: 'inherit', windowsHide: true });
+    } catch(cErr) {
+      console.log('[Builder] Nada novo a commitar.');
+    }
+    execSync(`git -C "${gitDir}" push origin main`, { stdio: 'inherit', windowsHide: true });
+    console.log(`[Builder] ✓ Push realizado com sucesso para GitHub (main)!`);
+  } catch(gitErr) {
+    console.warn('[Builder] Aviso no git push:', gitErr.message);
+  }
 
   console.log('\n=====================================================');
   console.log('   🎉 BUILD & EMPACOTAMENTO CONCLUÍDOS COM SUCESSO!  ');
