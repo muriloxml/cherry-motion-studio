@@ -1,11 +1,11 @@
 {
   "name": "Cherry Motion Studio",
-  "version": "2.1.2",
-  "build": 1793801886563,
+  "version": "2.2.0",
+  "build": 1793804547505,
   "releaseDate": "2026-11-04",
-  "releaseNotes": "v2.1.2: Build oficial assinado com suporte a Auto-Update OTA e sincronização em tempo real.",
+  "releaseNotes": "v2.2.0: Build oficial assinado com suporte a Auto-Update OTA e sincronização em tempo real.",
   "manifestUrl": "https://raw.githubusercontent.com/muriloxml/cherry-motion-studio/main/Distribuicao_Plugin/release_manifest.json",
   "bundleUrl": "https://raw.githubusercontent.com/muriloxml/cherry-motion-studio/main/Distribuicao_Plugin/ota_bundle.json",
   "filesCount": 6,
-  "bundleSha256": "e27e1f18283d04e703f1fcadffdf2beb05e439ff37bebc6e280b406418d3a491"
+  "bundleSha256": "c90bded5d791ebdf962494c71cc3f0e66917737fae6831f20399c7aa9f70a7e3"
 }
