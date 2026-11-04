@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
-title Instalador Oficial - Cherry Motion Studio v2.1.2
+title Instalador Oficial - Cherry Motion Studio v2.2.0
 color 0D
 
 echo ====================================================================
 echo             CHERRY MOTION STUDIO - INSTALADOR EM 1 CLIQUE           
-echo                     Versão: v2.1.2                       
+echo                     Versão: v2.2.0                       
 echo ====================================================================
 echo.
 
@@ -25,7 +25,7 @@ echo [2/3] Instalando extensão no Adobe Premiere Pro...
 if not exist "%APPDATA%\Adobe\CEP\extensions" mkdir "%APPDATA%\Adobe\CEP\extensions"
 
 :: Extrai o pacote .zxp usando PowerShell nativo (ZXP é compatível com ZIP)
-set "ZXP_FILE=%~dp0Cherry_Motion_Studio_v2.1.2.zxp"
+set "ZXP_FILE=%~dp0Cherry_Motion_Studio_v2.2.0.zxp"
 if not exist "%ZXP_FILE%" set "ZXP_FILE=%~dp0Cherry_Motion_Studio_LATEST.zxp"
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
