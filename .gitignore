@@ -1,0 +1,37 @@
+# Media renders and large outputs
+*.mov
+*.mp4
+*.cherry.json
+*.zip
+*.log
+render_frames/
+Studio/render_frames/
+Studio/outputs/
+outputs/
+
+# Private certificates and large binaries (ZXP is self-contained)
+Studio/bin/*.p12
+Studio/bin/*.exe
+bin/*.p12
+bin/*.exe
+
+# Node logs, backups and temporary files
+desktop.ini
+Thumbs.db
+node_out.log
+node_err.log
+Studio/node_out.log
+Studio/node_err.log
+_backup_*/
+Studio/_backup_*/
+node_modules/
+.tmp*
+current_config.json
+Studio/current_config.json
+
+# Scratch / dev scripts
+scratch/
+Studio/test_*.js
+Studio/inspect_*.js
+Studio/fix_*.js
+Studio/ae_test.jsx
