@@ -905,6 +905,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && pathname === '/api/ota/publish') {
+    if (!otaManager.isCreatorEnvironment()) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Acesso negado: apenas o desenvolvedor oficial pode publicar versões.' }));
+      return;
+    }
     let body = '';
     req.on('data', c => body += c);
     req.on('end', async () => {
@@ -928,6 +933,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'POST' && pathname === '/api/ota/config') {
+    if (!otaManager.isCreatorEnvironment()) {
+      res.writeHead(403, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Acesso negado: a URL de atualização oficial é protegida.' }));
+      return;
+    }
     let body = '';
     req.on('data', c => body += c);
     req.on('end', () => {
