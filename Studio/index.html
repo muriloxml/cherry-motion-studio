@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cherry Motion Studio — Edição Portátil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Bodoni+Moda:ital,opsz,wght@0,6..96,600;0,6..96,700;0,6..96,900;1,6..96,600&family=Cinzel:wght@600;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=Great+Vibes&family=Inter:wght@400;600;700;800;900&family=Italianno&family=JetBrains+Mono:wght@500;700;800&family=Montserrat:wght@400;700;900&family=Oswald:wght@700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@700;800&family=Prata&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family: 'Coolvetica'; src: url('/fonts/Coolvetica-Rg.otf') format('opentype'), local('Coolvetica Rg'), local('Coolvetica'); font-display: block; }
+    @font-face { font-family: 'MADE TOMMY'; src: url('/fonts/MADE-TOMMY-ExtraBold.otf') format('opentype'), url('/fonts/MADE-TOMMY-Regular.otf') format('opentype'), local('MADE TOMMY ExtraBold'), local('made-tommy'); font-display: block; }
+    @font-face { font-family: 'SF Pro Display'; src: url('/fonts/SF-Pro-Display-Bold.otf') format('opentype'), local('SF Pro Display Bold'), local('SFPRODISPLAYBOLD'); font-display: block; }
+    @font-face { font-family: 'Zuume'; src: url('/fonts/Zuume-Bold.ttf') format('truetype'), local('Zuume Bold'), local('Zuume'); font-display: block; }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #0E0409; }
+    ::-webkit-scrollbar-thumb { background: #341221; border-radius: 4px; border: 1px solid #541E35; }
+    ::-webkit-scrollbar-thumb:hover { background: #7A284C; }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFE8B5 30%, #FFD166 70%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] > summary .chev { transform: rotate(90deg); }
+    .chev { transition: transform .15s; display: inline-block; }
+    input[type=color] { -webkit-appearance: none; border: 0; padding: 0; background: none; cursor: pointer; }
+    input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type=color]::-webkit-color-swatch { border: 1px solid #5E1B3F; border-radius: 6px; }
+    #previewCanvas { cursor: default; }
+  </style>
+</head>
+<body class="bg-[#090306] text-[#FAF6EE] font-sans min-h-screen flex flex-col selection:bg-[#FF2E7E] selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-[#240A17] bg-[#12040C]/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF2E7E] to-[#FFD166] flex items-center justify-center shadow-lg shadow-[#FF2E7E]/25 text-[#12040C] font-black text-xl">✦</div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-lg font-bold tracking-tight gold-gradient-text">Cherry Motion Studio 2.0</h1>
+        <span class="px-2 py-0.5 rounded-md text-[10px] font-mono bg-[#240A17] border border-[#FF2E7E] text-[#FFD166]">MOGRT NATIVE ENGINE</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <button id="btnOtaBadge" onclick="openOtaModal()" class="px-3 py-2 rounded-xl bg-[#1F0815] hover:bg-[#2E0B20] border border-[#521838] text-xs text-[#FFD166] font-semibold flex items-center gap-2 transition" title="Central de Atualizações Over-The-Air (OTA) & Distribuição .ZXP">
+        <span id="otaStatusDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="otaVersionText">v2.1.0 • 🔄 Auto-Update</span>
+      </button>
+      <button onclick="openMogrtCatalogModal()" class="px-3 py-2 rounded-xl bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166] font-bold flex items-center gap-1.5 transition" title="Explorar todos os 29 templates MOGRT nativos">
+        <span>📚</span> Catálogo MOGRTs (29)
+      </button>
+      <button onclick="openFolder('outputs')" class="px-3 py-2 rounded-xl bg-[#190611] hover:bg-[#26091A] border border-[#341123] text-xs text-[#DFC89D] flex items-center gap-1.5 transition" title="Abrir pasta onde os vídeos .MOV são salvos">
+        <span>📂</span> Pasta .MOV
+      </button>
+      <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-[#190611] border border-[#341123] text-xs">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" id="prStatusDot"></span>
+        <div>
+          <span class="font-semibold text-[#DFC89D]" id="prStatusText">Modo Portátil Ativo</span>
+          <span class="text-gray-400 block text-[10px]" id="prSeqText">Verificando ponte Premiere...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Studio Workspace (ProRes 4444 & Canvas Live Engine) -->
+  <main class="flex-1 flex flex-col">
+  <!-- Suite Category Bar -->
+  <div class="bg-[#12040C] border-b border-[#240A17] px-6 py-2.5 flex flex-wrap gap-2 items-center justify-between">
+    <div class="flex flex-wrap gap-2" id="catBar"></div>
+    <div class="flex items-center gap-2">
+      <button onclick="exportPresetsJson()" class="text-[11px] font-mono text-gray-300 hover:text-white bg-[#1C0714] hover:bg-[#2A0B1E] px-2.5 py-1.5 rounded-lg border border-[#381126] transition">💾 Exportar Presets</button>
+      <label class="text-[11px] font-mono text-gray-300 hover:text-white bg-[#1C0714] hover:bg-[#2A0B1E] px-2.5 py-1.5 rounded-lg border border-[#381126] transition cursor-pointer">
+        📥 Importar Presets
+        <input type="file" accept=".json" onchange="importPresetsJson(event)" class="hidden">
+      </label>
+      <div class="text-[11px] font-mono text-[#DFC89D]/70 bg-[#1C0714] px-3 py-1.5 rounded-lg border border-[#381126]">⚡ MOGRT 0ms &amp; Zero Tokens</div>
+    </div>
+  </div>
+
+  <!-- Sub-Model Pills -->
+  <div id="subModelBar" class="bg-[#0E0309] border-b border-[#220715] px-6 py-2.5 flex items-center gap-2 overflow-x-auto text-xs"></div>
+
+  <!-- Quick Text Preview & Timeline Instant Apply Bar -->
+  <div id="quickTextBar" class="bg-[#14050F] border-b border-[#2B0E1E] px-4 md:px-6 py-2.5 flex flex-wrap items-center gap-3 justify-between">
+    <div class="flex-1 flex items-center gap-2.5 min-w-[280px]">
+      <span class="text-xs font-bold text-[#FFD166] flex items-center gap-1.5 shrink-0">
+        <span>⚡</span> <span class="hidden sm:inline">Texto Rápido:</span>
+      </span>
+      <div class="relative flex-1 flex items-center gap-2">
+        <div class="relative flex-1 min-w-[130px]">
+          <input type="text" id="inpQuickText" placeholder="Linha 1 (ex: ALTA FIXAÇÃO)... use *palavra* para grifar!" class="w-full bg-[#0E0308] border border-[#331123] focus:border-[#FFD166] rounded-xl px-3.5 py-2 text-xs text-[#FAF6EE] focus:outline-none placeholder-gray-500 font-sans shadow-inner">
+          <span id="quickText1Badge" class="absolute right-2.5 top-2 text-[9px] font-mono text-gray-400 uppercase pointer-events-none hidden sm:inline">Linha 1</span>
+        </div>
+        <div id="quickText2Wrapper" class="relative flex-1 min-w-[130px] hidden">
+          <input type="text" id="inpQuickText2" placeholder="Linha 2 (ex: perfeita)..." class="w-full bg-[#0E0308] border border-[#331123] focus:border-[#FF2E7E] rounded-xl px-3.5 py-2 text-xs text-[#FFD166] focus:outline-none placeholder-gray-500 font-serif italic shadow-inner">
+          <span id="quickText2Badge" class="absolute right-2.5 top-2 text-[9px] font-mono text-[#FF2E7E] uppercase pointer-events-none hidden sm:inline">Linha 2</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button id="btnQuickInsertMogrt" onclick="handleQuickInsertClick()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FFD166] via-[#FFB703] to-[#FF2E7E] text-[#12040C] font-black text-xs hover:brightness-110 active:scale-[0.98] shadow-md shadow-[#FF2E7E]/25 flex items-center gap-1.5 transition" title="Inserir motion instantaneamente com estilo visual 100% idêntico ao preview">
+        <span id="quickInsertSpinner" class="hidden animate-spin">🌀</span>
+        <span id="quickInsertIcon">⚡</span>
+        <span id="quickInsertText">Inserir na Timeline</span>
+      </button>
+      <button onclick="handleInsertMogrtClick()" class="px-3 py-2 rounded-xl bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#3A1127] text-xs text-[#DFC89D] flex items-center gap-1.5 transition" title="Inserir como MOGRT nativo no Essential Graphics">
+        <span>📄</span> <span class="hidden md:inline">MOGRT Nativo</span>
+      </button>
+      <button onclick="openCaptionSequenceModal()" class="px-3 py-2 rounded-xl bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#3A1127] text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition" title="Gerar sequência automática de frases de legendas">
+        <span>📝</span> <span class="hidden lg:inline">Sequência</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Letter Chips Bar (Pintar Letras Direto no Topo) -->
+  <div id="quickCharChipsBar" class="bg-[#0B0207] border-b border-[#240918] px-4 md:px-6 py-2 flex flex-wrap items-center gap-2 justify-between">
+    <div class="flex items-center gap-2 flex-1 min-w-[280px] overflow-x-auto">
+      <span id="quickCharLayerLabel" class="text-[11px] font-bold text-[#FFD166] flex items-center gap-1 shrink-0">
+        <span>🎨</span> <span>Cor por Letra:</span>
+      </span>
+      <div id="quickCharChipsContainer" class="flex items-center gap-1.5 flex-wrap"></div>
+    </div>
+    <div class="flex items-center gap-1.5 shrink-0 text-xs">
+      <span class="text-[10px] text-gray-400">Pincel:</span>
+      <button type="button" onclick="selectGlobalBrush('#FFFFFF')" id="quickBrushWhite" class="px-2 py-0.5 rounded text-[10px] font-mono border border-gray-500 bg-white text-black font-bold">⚪ Base</button>
+      <button type="button" onclick="selectGlobalBrush('#FFD166')" id="quickBrushGold" class="px-2 py-0.5 rounded text-[10px] font-mono border border-[#FFD166] bg-[#FFD166] text-black font-bold ring-2 ring-white">🟡 Ouro</button>
+      <button type="button" onclick="selectGlobalBrush('#FF2E7E')" id="quickBrushPink" class="px-2 py-0.5 rounded text-[10px] font-mono border border-[#FF2E7E] bg-[#FF2E7E] text-white font-bold">🌸 Rosa</button>
+      <button type="button" onclick="selectGlobalBrush('#22D3EE')" id="quickBrushCyan" class="px-2 py-0.5 rounded text-[10px] font-mono border border-[#22D3EE] bg-[#22D3EE] text-[#0A1A24] font-bold">💎 Ciano</button>
+      <input type="color" id="quickBrushCustom" value="#FFD166" onchange="selectGlobalBrush(this.value)" class="w-6 h-6 rounded cursor-pointer border border-gray-600 bg-transparent p-0" title="Cor personalizada">
+      <button type="button" onclick="resetQuickCharColors()" class="text-[9px] px-1.5 py-0.5 rounded bg-[#1C0714] border border-[#3A1127] text-gray-400 hover:text-white hover:border-[#FF2E7E] ml-1">↺ Resetar</button>
+    </div>
+  </div>
+
+  <!-- Main Grid (Responsive for CEP Panel & Desktop) -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 p-3 md:p-6 max-w-[1760px] w-full mx-auto">
+
+    <!-- Controls Column (Appears below preview on CEP panel, on left on wide screens) -->
+    <div class="order-2 lg:order-1 lg:col-span-5 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-140px)] pr-1">
+
+      <!-- Live-Link & Timeline Sync Status -->
+      <div id="liveLinkCard" class="bg-[#15050F] border border-[#3A1229] rounded-2xl p-4 shadow-xl flex flex-col gap-2.5 transition">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="liveLinkDot" class="w-2.5 h-2.5 rounded-full bg-gray-500"></span>
+            <span id="liveLinkTitle" class="text-xs font-bold text-[#DFC89D]">Live-Link Premiere Pro</span>
+          </div>
+          <span id="liveLinkBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#240A17] text-gray-300 border border-[#3A1127]">Standalone</span>
+        </div>
+        <div id="liveLinkDetails" class="text-[11px] text-gray-400 leading-snug">
+          Selecione qualquer clipe Cherry na timeline do Premiere para editar suas propriedades em tempo real.
+        </div>
+        <div id="liveLinkActions" class="hidden flex items-center justify-between pt-1.5 border-t border-[#2B0E1E]">
+          <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1"><span>🔗</span> Clipe sincronizado</span>
+          <button onclick="unlinkSelectedClip()" class="text-[10px] text-gray-400 hover:text-white underline">Desconectar seleção</button>
+        </div>
+      </div>
+
+      <!-- Exportação & Premiere Actions -->
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-4 md:p-5 shadow-xl flex flex-col gap-4">
+        <div class="flex items-center justify-between border-b border-[#2B0E1E] pb-2">
+          <h2 class="text-sm font-bold text-[#DFC89D] uppercase tracking-wider flex items-center gap-2">
+            <span>⚡</span> MOGRT Nativo &amp; Export
+          </h2>
+          <span class="text-[10px] font-mono text-[#FFD166] bg-[#220716] px-2 py-0.5 rounded border border-[#3D1229]">Instantâneo • 0ms</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] text-gray-400 block mb-1">Duração (segundos)</label>
+            <input type="number" id="inpDuration" value="3.0" step="0.1" min="0.5" max="10.0" class="w-full bg-[#0E0308] border border-[#331123] rounded-lg px-3 py-1.5 text-xs focus:border-[#FFD166] focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-gray-400 block mb-1">Taxa de Quadros (FPS)</label>
+            <select id="selFps" class="w-full bg-[#0E0308] border border-[#331123] rounded-lg px-3 py-1.5 text-xs focus:border-[#FFD166] focus:outline-none">
+              <option value="29.97" selected>29.97 FPS (Reels)</option>
+              <option value="59.94">59.94 FPS (Broadcast)</option>
+              <option value="24">24 FPS (Cinemático)</option>
+              <option value="30">30 FPS</option>
+              <option value="60">60 FPS</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1 text-xs text-gray-300">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chkAtPlayhead" checked class="accent-[#FFD166]"><span>Inserir na posição da agulha (Playhead)</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chkLiveSyncTyping" checked class="accent-[#FFD166]"><span>Live-Sync instantâneo ao digitar (Sem esperar render)</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="chkSaveLibrary" checked class="accent-[#FFD166]"><span>Salvar cópia na biblioteca central (`CHERRY MOTIONS`)</span></label>
+        </div>
+
+        <!-- Render & MOGRT Buttons -->
+        <div class="pt-2 flex flex-col gap-2">
+          <!-- Primary Action: Inserir Turbo Direct-Pipe (100% Idêntico ao Live Preview) -->
+          <button id="btnInsertTurboHero" onclick="handleQuickInsertClick()" class="w-full py-3.5 px-4 rounded-xl font-black text-sm bg-gradient-to-r from-[#FFD166] via-[#FFB703] to-[#FF2E7E] text-[#12040C] shadow-lg shadow-[#FF2E7E]/30 hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center gap-2">
+            <span id="btnTurboSpinner" class="hidden animate-spin">🌀</span>
+            <span id="btnTurboIcon">⚡</span>
+            <span id="btnTurboText">INSERIR NA TIMELINE (TURBO 100% IDÊNTICO)</span>
+          </button>
+
+          <!-- Secondary Actions -->
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btnInsertMogrtHero" onclick="handleInsertMogrtClick()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-amber-950/60 border border-amber-700/50 text-[#FFD166] hover:bg-amber-900/60 transition flex items-center justify-center gap-1.5" title="Inserir como MOGRT nativo no Essential Graphics (0ms)">
+              <span id="btnMogrtSpinner" class="hidden animate-spin">🌀</span>
+              <span id="btnMogrtIcon">📄</span>
+              <span id="btnMogrtText">MOGRT Nativo</span>
+            </button>
+            <button id="btnSyncMogrtParams" onclick="handleUpdateMogrtClick()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 hover:bg-emerald-900 transition flex items-center justify-center gap-1.5" title="Sincronizar parâmetros com o MOGRT selecionado na timeline">
+              <span>🔄</span> Sincronizar MOGRT
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2">
+            <button id="btnRender" onclick="handleMainRenderClick()" class="py-2 px-3 rounded-xl font-semibold text-[11px] bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5" title="Renderizar vídeo .MOV em ProRes 4444 com canal alfa completo (legado)">
+              <span id="btnSpinner" class="hidden animate-spin">🌀</span>
+              <span id="btnIcon">🎬</span>
+              <span id="btnText">Exportar Arquivo .MOV Avulso</span>
+            </button>
+          </div>
+
+          <button id="btnInsertNew" onclick="handleInsertNewClick()" class="hidden w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-[#240A17] hover:bg-[#330E21] border border-[#481530] text-[#FFD166] transition flex items-center justify-center gap-2">
+            <span>➕</span> Inserir como Novo na Agulha (Manter Original)
+          </button>
+        </div>
+
+        <div id="statusBox" class="hidden p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap"></div>
+
+        <!-- Botões rápidos pós-render -->
+        <div id="lastRenderActions" class="hidden grid grid-cols-2 gap-2 pt-1">
+          <a id="btnDownloadLast" href="#" download class="py-2.5 px-3 rounded-xl font-bold text-xs bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 hover:bg-emerald-500/30 transition flex items-center justify-center gap-1.5">
+            <span>⬇</span> Baixar .MOV
+          </a>
+          <button id="btnShowLastFolder" onclick="openLastFileInFolder()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-[#240A17] border border-[#4A1530] text-[#FFD166] hover:bg-[#330E21] transition flex items-center justify-center gap-1.5">
+            <span>📂</span> Mostrar na Pasta
+          </button>
+        </div>
+      </div>
+
+      <!-- Camadas individuais -->
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-4 md:p-5 shadow-xl flex flex-col gap-3">
+        <div class="flex items-center justify-between border-b border-[#2B0E1E] pb-2">
+          <h2 class="text-sm font-bold text-[#DFC89D] uppercase tracking-wider flex items-center gap-2"><span>🧩</span> Camadas Independentes</h2>
+          <button onclick="resetAllLayers()" class="text-[10px] px-2 py-1 rounded bg-[#1F0715] border border-[#3A1127] text-gray-300 hover:text-white hover:border-[#FF2E7E] transition">↺ Resetar todas</button>
+        </div>
+        <p class="text-[11px] text-gray-400 leading-snug">Clique numa camada abaixo — ou <strong class="text-[#FFD166]">arraste direto no preview</strong> — para editar texto, fonte, cor, tamanho e posição individual.</p>
+        <div id="layersPanel" class="flex flex-col gap-2"></div>
+      </div>
+
+      <!-- Velocidade & Tempo Global -->
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-4 md:p-5 shadow-xl flex flex-col gap-4">
+        <div class="flex items-center justify-between border-b border-[#2B0E1E] pb-2">
+          <h2 class="text-sm font-bold text-[#DFC89D] uppercase tracking-wider flex items-center gap-2">
+            <span>⏱️</span> Velocidade &amp; Início
+          </h2>
+          <button onclick="resetGlobalTiming()" class="text-[10px] px-2 py-0.5 rounded bg-[#1F0715] border border-[#3A1127] text-gray-300 hover:text-white hover:border-[#FFD166] transition">1.0x Padrão</button>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs text-gray-300">
+            <span>Velocidade Geral da Animação</span>
+            <span class="text-[#FFD166] font-mono font-bold" id="valGlobalSpeed">100% (1.00x)</span>
+          </div>
+          <input type="range" id="sliderGlobalSpeed" min="0.25" max="3.0" step="0.05" value="1.0" class="w-full accent-[#FFD166] bg-[#0E0308] h-2 rounded-lg">
+          <div class="flex justify-between gap-1 pt-1">
+            <button onclick="setGlobalSpeed(0.5)" class="flex-1 py-1 rounded bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[10px] text-gray-300 font-mono">0.5x</button>
+            <button onclick="setGlobalSpeed(0.75)" class="flex-1 py-1 rounded bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[10px] text-gray-300 font-mono">0.75x</button>
+            <button onclick="setGlobalSpeed(1.0)" class="flex-1 py-1 rounded bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[10px] text-[#FFD166] font-mono">1.0x</button>
+            <button onclick="setGlobalSpeed(1.5)" class="flex-1 py-1 rounded bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[10px] text-gray-300 font-mono">1.5x</button>
+            <button onclick="setGlobalSpeed(2.0)" class="flex-1 py-1 rounded bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[10px] text-gray-300 font-mono">2.0x</button>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs text-gray-300">
+            <span>Início Geral (Atrasar entrada)</span>
+            <span class="text-[#DFC89D] font-mono" id="valGlobalDelay">0.00s</span>
+          </div>
+          <input type="range" id="sliderGlobalDelay" min="0" max="3.0" step="0.05" value="0" class="w-full accent-[#FFD166] bg-[#0E0308] h-2 rounded-lg">
+        </div>
+      </div>
+
+      <!-- Posicionamento & Escala Global -->
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-4 md:p-5 shadow-xl flex flex-col gap-4">
+        <h2 class="text-sm font-bold text-[#DFC89D] uppercase tracking-wider flex items-center gap-2 border-b border-[#2B0E1E] pb-2">
+          <span>📐</span> Posição &amp; Escala Geral
+        </h2>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs text-gray-300"><span>Posição Vertical (Y)</span><span class="text-[#DFC89D] font-mono" id="valPosY">50%</span></div>
+          <input type="range" id="sliderPosY" min="0.10" max="0.90" step="0.01" value="0.5" class="w-full accent-[#FFD166] bg-[#0E0308] h-2 rounded-lg">
+          <div class="flex justify-between text-[10px] text-gray-500 pt-1">
+            <button onclick="setPosY(0.28)" class="hover:text-gray-300">Topo (28%)</button>
+            <button onclick="setPosY(0.50)" class="hover:text-gray-300">Centro (50%)</button>
+            <button onclick="setPosY(0.72)" class="hover:text-gray-300">Inferior (72%)</button>
+          </div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs text-gray-300"><span>Posição Horizontal (X)</span><span class="text-[#DFC89D] font-mono" id="valPosX">50%</span></div>
+          <input type="range" id="sliderPosX" min="0.10" max="0.90" step="0.01" value="0.5" class="w-full accent-[#FFD166] bg-[#0E0308] h-2 rounded-lg">
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs text-gray-300"><span>Escala Geral do Motion</span><span class="text-[#DFC89D] font-mono" id="valScale">100%</span></div>
+          <input type="range" id="sliderScale" min="0.4" max="1.6" step="0.05" value="1.0" class="w-full accent-[#FFD166] bg-[#0E0308] h-2 rounded-lg">
+        </div>
+      </div>
+
+      <!-- Histórico de Vídeos Renderizados -->
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-4 md:p-5 shadow-xl flex flex-col gap-3">
+        <div class="flex items-center justify-between border-b border-[#2B0E1E] pb-2">
+          <h2 class="text-sm font-bold text-[#DFC89D] uppercase tracking-wider flex items-center gap-2"><span>📦</span> Histórico de .MOV</h2>
+          <button onclick="openFolder('outputs')" class="text-[10px] px-2 py-1 rounded bg-[#1F0715] border border-[#3A1127] text-[#FFD166] hover:border-[#FFD166] transition">Abrir pasta</button>
+        </div>
+        <div id="recentOutputsList" class="flex flex-col gap-1.5 text-xs text-gray-400">
+          Carregando histórico...
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Preview Column (Appears on top on CEP panel, on right on wide desktop) -->
+    <div class="order-1 lg:order-2 lg:col-span-7 flex flex-col gap-4">
+      <div class="bg-[#15050F] border border-[#2B0E1E] rounded-2xl p-3 md:p-4 shadow-2xl flex flex-col items-center sticky top-2">
+        <div class="w-full flex items-center justify-between pb-2.5 px-1 border-b border-[#240A17] mb-2.5">
+          <div class="flex items-center gap-2 truncate">
+            <span class="text-xs font-bold text-[#DFC89D] uppercase tracking-wider truncate" id="previewTitle">Modelo Ativo</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950/70 border border-emerald-800/40 text-emerald-300 font-mono shrink-0">LIVE PREVIEW</span>
+          </div>
+          <span class="text-xs font-mono text-[#DFC89D] shrink-0" id="timecodeDisplay">0.00s / 3.00s</span>
+        </div>
+
+        <div class="w-full relative aspect-[16/9] rounded-xl overflow-hidden border border-[#331123] flex items-center justify-center shadow-inner"
+             style="background-color:#0b0b0d;background-image:linear-gradient(45deg,#17171b 25%,transparent 25%),linear-gradient(-45deg,#17171b 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#17171b 75%),linear-gradient(-45deg,transparent 75%,#17171b 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0;">
+          <canvas id="previewCanvas" width="1600" height="900" class="w-full h-full object-contain"></canvas>
+        </div>
+
+        <div class="w-full mt-3 flex items-center gap-2 md:gap-3 bg-[#0E0308] p-2.5 md:p-3 rounded-xl border border-[#240A17]">
+          <button id="btnPlayPause" onclick="togglePlay()" class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-[#240A17] border border-[#481530] hover:border-[#FFD166] text-[#FFD166] font-bold flex items-center justify-center transition">▶</button>
+          <input type="range" id="timelineScrubber" min="0" max="3.0" step="0.01" value="0" class="flex-1 accent-[#FFD166] bg-[#1F0715] h-2.5 rounded-lg">
+          <button onclick="seekTo(0)" class="px-2 py-1.5 text-xs rounded bg-[#1F0715] border border-[#3A1127] text-gray-300 hover:text-white">⏮</button>
+          <button onclick="seekRest()" class="px-2 py-1.5 text-xs rounded bg-[#1F0715] border border-[#3A1127] text-gray-300 hover:text-white">Pose final</button>
+        </div>
+
+        <div class="w-full mt-3 p-3 rounded-xl bg-[#190612] border border-[#3A1229] text-[11px] text-[#DFC89D]/85 flex gap-2.5 items-start">
+          <span class="text-sm">💡</span>
+          <div>
+            <strong class="text-[#FFD166]">Edição Direta:</strong> Arraste qualquer texto ou elemento na tela para mudar a posição. Selecione um clipe na timeline do Premiere para sincronizar automaticamente!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
+
+  <!-- Modal: Gerador de Sequência de Legendas MOGRT -->
+  <div id="captionSequenceModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-[#12040C] border border-[#381126] rounded-2xl max-w-xl w-full p-5 shadow-2xl flex flex-col gap-4 text-left">
+      <div class="flex items-center justify-between border-b border-[#240A17] pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">📝</span>
+          <div>
+            <h3 class="text-sm font-bold text-[#DFC89D]">Gerador de Sequência de Legendas MOGRT</h3>
+            <p class="text-[11px] text-gray-400">Insere cortes sequenciais na timeline automaticamente (0ms)</p>
+          </div>
+        </div>
+        <button onclick="closeCaptionSequenceModal()" class="w-8 h-8 rounded-lg bg-[#1C0714] border border-[#381126] text-gray-400 hover:text-white flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-semibold text-gray-300 block">Frases ou Palavras (uma por linha)</label>
+        <textarea id="seqPhrasesText" rows="6" placeholder="Cole as frases da sua fala aqui...&#10;Exemplo:&#10;O SEGREDO DA&#10;RETENÇÃO PERFEITA&#10;COMEÇA NOS PRIMEIROS&#10;TRÊS SEGUNDOS" class="w-full bg-[#0E0308] border border-[#331123] rounded-xl p-3 text-xs text-[#FAF6EE] focus:border-[#FFD166] focus:outline-none font-sans leading-relaxed"></textarea>
+        <span class="text-[10px] text-gray-500">Dica: Cada linha gerará um clipe MOGRT individual e sequenciado na timeline.</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[11px] font-semibold text-gray-300 block mb-1">Modelo MOGRT</label>
+          <select id="seqTemplateSelect" class="w-full bg-[#0E0308] border border-[#331123] rounded-lg px-2.5 py-1.5 text-xs text-[#DFC89D] focus:border-[#FFD166] focus:outline-none">
+            <!-- populated dynamically -->
+          </select>
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-gray-300 block mb-1">Duração por Frase (segundos)</label>
+          <input type="number" id="seqDurationPerPhrase" value="2.0" step="0.25" min="0.5" max="10.0" class="w-full bg-[#0E0308] border border-[#331123] rounded-lg px-3 py-1.5 text-xs text-[#FAF6EE] focus:border-[#FFD166] focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[11px] font-semibold text-gray-300 block mb-1">Trilha de Destino</label>
+          <select id="seqTrackOffset" class="w-full bg-[#0E0308] border border-[#331123] rounded-lg px-2.5 py-1.5 text-xs text-[#DFC89D] focus:border-[#FFD166] focus:outline-none">
+            <option value="1" selected>Trilha Vídeo 2 (V2)</option>
+            <option value="2">Trilha Vídeo 3 (V3)</option>
+            <option value="3">Trilha Vídeo 4 (V4)</option>
+            <option value="0">Trilha Vídeo 1 (V1)</option>
+          </select>
+        </div>
+        <div class="flex items-end pb-0.5">
+          <label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
+            <input type="checkbox" id="seqAtPlayhead" checked class="accent-[#FFD166]">
+            <span>Iniciar na posição da agulha</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="seqStatusBox" class="hidden p-3 rounded-xl text-xs font-mono whitespace-pre-wrap"></div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-[#240A17]">
+        <button onclick="closeCaptionSequenceModal()" class="px-4 py-2 rounded-xl bg-[#1C0714] border border-[#381126] text-xs text-gray-300 hover:text-white">Cancelar</button>
+        <button id="btnExecuteSequence" onclick="executeCaptionSequence()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FFD166] via-[#FFB703] to-[#FF2E7E] text-[#12040C] font-black text-xs hover:brightness-110 active:scale-[0.98] shadow-md shadow-[#FF2E7E]/25 flex items-center gap-2">
+          <span>⚡</span> Inserir Sequência na Timeline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Catálogo de MOGRTs Cherry Motion 2.0 -->
+  <div id="mogrtCatalogModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#12040C] border border-[#381126] rounded-2xl max-w-4xl w-full max-h-[90vh] p-5 shadow-2xl flex flex-col gap-4 text-left">
+      <div class="flex items-center justify-between border-b border-[#240A17] pb-3 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF2E7E] to-[#FFD166] flex items-center justify-center text-[#12040C] font-black">✦</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#DFC89D]">Catálogo Nativo de MOGRTs — Cherry Motion 2.0</h3>
+            <p class="text-[11px] text-gray-400">29 templates compilados nativamente para o Adobe Premiere Pro</p>
+          </div>
+        </div>
+        <button onclick="closeMogrtCatalogModal()" class="w-8 h-8 rounded-lg bg-[#1C0714] border border-[#381126] text-gray-400 hover:text-white flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <!-- Suite filter tabs -->
+      <div class="flex flex-wrap gap-1.5 shrink-0 border-b border-[#240A17] pb-2.5" id="catalogSuiteTabs">
+        <!-- populated dynamically -->
+      </div>
+
+      <!-- Templates grid -->
+      <div class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pr-1" id="catalogGrid">
+        <!-- populated dynamically -->
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-[#240A17] shrink-0 text-xs">
+        <span class="text-gray-500 font-mono" id="catalogCountText">29 templates carregados</span>
+        <div class="flex items-center gap-2">
+          <button onclick="rebuildMogrtsFromServer()" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-gray-300 hover:text-white text-[11px]">🔄 Recompilar MOGRTs</button>
+          <button onclick="closeMogrtCatalogModal()" class="px-4 py-1.5 rounded-lg bg-[#FFD166] text-[#12040C] font-bold text-xs">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Auto-Update Over-The-Air (OTA) & Distribuição .ZXP -->
+  <div id="otaModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#12040C] border border-[#381126] rounded-2xl max-w-xl w-full p-5 shadow-2xl flex flex-col gap-4 text-left">
+      <div class="flex items-center justify-between border-b border-[#240A17] pb-3 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF2E7E] to-[#FFD166] flex items-center justify-center text-[#12040C] font-black">🔄</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#DFC89D]">Central de Atualizações Over-The-Air (OTA)</h3>
+            <p class="text-[11px] text-gray-400">Atualização em tempo real de código, templates e motor sem reinstalar .ZXP</p>
+          </div>
+        </div>
+        <button onclick="closeOtaModal()" class="w-8 h-8 rounded-lg bg-[#1C0714] border border-[#381126] text-gray-400 hover:text-white flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <!-- Version Status Box -->
+      <div class="p-4 rounded-xl bg-[#190611] border border-[#341123] flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[11px] text-gray-400 block font-mono">VERSÃO ATIVA</span>
+            <div class="flex items-baseline gap-2">
+              <span class="text-base font-bold text-[#FFD166]" id="otaActiveVerLabel">v2.1.0</span>
+              <span class="text-[10px] text-gray-500 font-mono" id="otaBuildLabel">(Build 2101)</span>
+            </div>
+          </div>
+          <button onclick="checkOtaUpdates()" id="btnCheckUpdates" class="px-3.5 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#DFC89D] hover:text-white flex items-center gap-1.5 transition">
+            <span>🔄</span> Verificar Agora
+          </button>
+        </div>
+
+        <div id="otaStatusBanner" class="p-3 rounded-lg bg-[#0E0308] border border-[#2B0E1E] text-xs text-gray-300">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400" id="otaBannerDot"></span>
+            <span id="otaBannerText">Verificando status de atualizações...</span>
+          </div>
+          <div id="otaChangelogText" class="mt-2 text-[11px] text-gray-400 whitespace-pre-wrap hidden"></div>
+        </div>
+
+        <!-- Action Button for Applying Update (Dynamic) -->
+        <div id="otaActionArea" class="hidden flex items-center justify-between pt-1">
+          <span class="text-xs text-amber-300 font-medium">⚡ Nova versão pronta para instalação imediata!</span>
+          <button onclick="applyOtaUpdate()" id="btnApplyUpdate" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF2E7E] to-[#FFD166] text-[#12040C] font-black text-xs shadow-lg hover:brightness-110 flex items-center gap-1.5 transition">
+            <span>🚀</span> Atualizar Agora (1 Clique)
+          </button>
+        </div>
+      </div>
+
+      <!-- Advanced: Remote URL & Publisher Tools -->
+      <details class="text-xs text-gray-400 group">
+        <summary class="cursor-pointer text-[11px] text-[#DFC89D] hover:text-[#FFD166] font-semibold py-1">
+          ⚙️ Ferramentas de Distribuição & Configurações Avançadas
+        </summary>
+        <div class="mt-2.5 p-3.5 rounded-xl bg-[#0E0308] border border-[#2B0E1E] flex flex-col gap-3">
+          <div>
+            <label class="block text-[10px] uppercase font-mono text-gray-500 mb-1">URL de Atualização Remota (GitHub Raw / Gist / Nuvem):</label>
+            <div class="flex gap-2">
+              <input type="text" id="inpRemoteUrl" placeholder="https://raw.githubusercontent.com/.../release_manifest.json" class="flex-1 px-2.5 py-1.5 rounded-lg bg-[#14050E] border border-[#381126] text-xs text-[#DFC89D] focus:border-[#FFD166] outline-none">
+              <button onclick="saveOtaConfig()" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166]">Salvar</button>
+            </div>
+          </div>
+
+          <div class="border-t border-[#1F0715] pt-2.5">
+            <span class="block text-[10px] uppercase font-mono text-gray-500 mb-1.5">Publicar Nova Versão (Criador / Editor):</span>
+            <p class="text-[11px] text-gray-400 mb-2">Gera o arquivo oficial <code class="text-[#FFD166]">.ZXP</code> assinado com Adobe ZXPSignCmd e cria o pacote delta OTA em <code class="text-gray-300">Distribuicao_Plugin/</code>.</p>
+            <div class="flex items-center gap-2">
+              <button onclick="publishNewOtaVersion('patch')" id="btnPubPatch" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
+                Incrementar Patch (+0.0.1)
+              </button>
+              <button onclick="publishNewOtaVersion('minor')" id="btnPubMinor" class="px-3 py-1.5 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-xs text-[#DFC89D]">
+                Incrementar Minor (+0.1.0)
+              </button>
+              <button onclick="openFolder('dist')" class="px-3 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] border border-[#521838] text-xs text-[#FFD166] ml-auto">
+                📁 Ver Pasta Distribuição
+              </button>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="flex items-center justify-between pt-2 border-t border-[#240A17] text-xs">
+        <span class="text-gray-500 font-mono text-[10px]" id="otaCheckTimeText">Última checagem: verificando...</span>
+        <button onclick="closeOtaModal()" class="px-4 py-1.5 rounded-lg bg-[#240A17] hover:bg-[#340F22] text-[#DFC89D] font-bold text-xs">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/engine.js"></script>
+  <script>
+    const E = window.CherryEngine;
+    const SUITES = E.SUITES;
+    const canvas = document.getElementById('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    const CW = E.CW, CH = E.CH;
+
+    const CAT_META = {
+      hook:    { icon: '🎣', label: '1. Hooks Interrogativos (#07)' },
+      haute:   { icon: '✨', label: '2. Haute Couture & Assinaturas (#05)' },
+      viral:   { icon: '🔥', label: '3. Templates Virais (T1 - T4)' },
+      element: { icon: '🏷️', label: '4. Preços & Elementos (#01 - #06)' },
+      text_anim: { icon: '⚡', label: '5. Text Animation (AutoEdit)' }
+    };
+    const FONTS = ['Syne', 'Montserrat', 'Inter', 'Playfair Display', 'JetBrains Mono', 'Coolvetica', 'MADE TOMMY', 'SF Pro Display', 'Zuume', 'Cinzel', 'Pinyon Script',
+      'Bodoni Moda', 'Cormorant Garamond', 'Alex Brush', 'Allura', 'Great Vibes', 'Italianno', 'Parisienne', 'Prata', 'Oswald',
+      'Plus Jakarta Sans', 'Arial', 'Impact'];
+    const STORE_KEY = 'cherryStudioLayers_v2';
+
+    let isPlaying = false, currentTime = 0, lastTs = null;
+    let cat = 'viral', sub = 'kinetic_slam';
+    let selected = null, drag = null;
+    let lastRenderedFile = null;
+    let store = {};
+    try { store = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { store = {}; }
+
+    const $ = id => document.getElementById(id);
+    const key = () => cat + '/' + sub;
+    const ovr = () => (store[key()] = store[key()] || {});
+    let saveTimer = null;
+    const persist = () => {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {}
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        fetch('/api/presets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(store)
+        }).catch(() => {});
+      }, 300);
+    };
+    const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    const model = () => SUITES[cat].models.find(m => m.id === sub);
+
+    function curCfg() {
+      return {
+        posX: parseFloat($('sliderPosX').value), posY: parseFloat($('sliderPosY').value),
+        globalScale: parseFloat($('sliderScale').value) || 1,
+        globalSpeed: parseFloat($('sliderGlobalSpeed').value) || 1,
+        globalDelay: parseFloat($('sliderGlobalDelay').value) || 0,
+        duration: parseFloat($('inpDuration').value) || 3.0,
+        layers: ovr()
+      };
+    }
+
+    /* ---------- Export / Import Presets ---------- */
+    function exportPresetsJson() {
+      const blob = new Blob([JSON.stringify(store, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `CherryMotion_Presets_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+    function importPresetsJson(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          store = Object.assign(store, data);
+          persist();
+          renderPanel();
+          E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+        } catch (e) { alert('Arquivo JSON inválido'); }
+      };
+      reader.readAsText(file);
+    }
+
+    /* ---------- Render ---------- */
+    function renderFrame(u) {
+      E.draw(ctx, cat, sub, u, curCfg());
+      drawSelection();
+    }
+    function drawSelection() {
+      if (!selected) return;
+      const hs = E.hits.filter(h => h.id === selected);
+      if (!hs.length) return;
+      const h = hs[hs.length - 1];
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.strokeStyle = '#22D3EE'; ctx.lineWidth = 2; ctx.setLineDash([8, 6]);
+      ctx.strokeRect(h.x0 - 4, h.y0 - 4, (h.x1 - h.x0) + 8, (h.y1 - h.y0) + 8);
+      ctx.restore();
+    }
+
+    /* ---------- Categorias / modelos ---------- */
+    function renderCatBar() {
+      $('catBar').innerHTML = Object.keys(SUITES).map(c => {
+        const act = c === cat;
+        return `<button onclick="setCategory('${c}')" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${act ? 'bg-[#FFD166] text-[#12040C] shadow-lg shadow-[#FFD166]/20' : 'bg-[#1C0714] border border-[#381126] text-gray-300 hover:text-white'}"><span>${CAT_META[c].icon}</span> ${CAT_META[c].label}</button>`;
+      }).join('');
+    }
+    function renderSubModelPills() {
+      $('subModelBar').innerHTML = SUITES[cat].models.map(m => {
+        const act = m.id === sub;
+        return `<button onclick="setSubModel('${m.id}')" class="px-3.5 py-1.5 rounded-lg font-semibold transition whitespace-nowrap ${act ? 'bg-[#FF2E7E] text-white shadow-md shadow-[#FF2E7E]/30 font-bold' : 'bg-[#190611] text-gray-400 hover:text-white border border-[#320F22]'}">${m.label}</button>`;
+      }).join('');
+      $('previewTitle').innerText = `${SUITES[cat].name} > ${model().label}`;
+    }
+    function setCategory(c) { selectModel(c, SUITES[c].models[0].id); }
+    function setSubModel(s) { selectModel(cat, s); }
+    function selectModel(c, s) {
+      cat = c; sub = s; selected = null; drag = null;
+      const m = model();
+      $('inpDuration').value = m.dur;
+      $('timelineScrubber').max = m.dur;
+      renderCatBar(); renderSubModelPills(); renderPanel();
+      syncQuickTextInput();
+      syncQuickCharChipsBar();
+      E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+      seekTo(m.rest);
+    }
+
+    /* ---------- Painel de camadas ---------- */
+    const INP = 'bg-[#0E0308] border border-[#331123] rounded-lg px-2 py-1.5 text-xs focus:border-[#FFD166] focus:outline-none';
+    const LABELS = { color: 'Cor Base', color2: 'Cor de Destaque (*)', fill: 'Preenchimento', stroke: 'Borda / Traço', w: 'Largura', h: 'Altura', size: 'Tamanho', font: 'Fonte', text: 'Texto', sweep: 'Feixe de luz', glow: 'Intensidade Glow' };
+
+    function fontOptions(sel) {
+      const list = FONTS.includes(sel) ? FONTS : [sel, ...FONTS];
+      return list.map(f => `<option value="${esc(f)}" ${f === sel ? 'selected' : ''}>${esc(f)}</option>`).join('');
+    }
+
+    function layerCard(d, l) {
+      const id = d.id;
+      const lab = p => (d.labels && d.labels[p]) || LABELS[p] || p;
+      const ctl = [];
+      d.props.forEach(p => {
+        if (p === 'text') ctl.push(`<div class="col-span-2"><label class="text-[10px] text-gray-400">${lab(p)}</label><input type="text" data-l="${id}" data-p="text" value="${esc(l.text)}" class="w-full ${INP} text-sm"></div>`);
+        else if (p === 'font') ctl.push(`<div class="col-span-1"><label class="text-[10px] text-gray-400">${lab(p)}</label><select data-l="${id}" data-p="font" class="w-full ${INP}">${fontOptions(l.font)}</select></div>`);
+        else if (p === 'size') ctl.push(`<div class="col-span-1"><label class="text-[10px] text-gray-400">${lab(p)} (px)</label><input type="number" min="6" max="600" data-l="${id}" data-p="size" value="${l.size}" class="w-full ${INP} text-center"></div>`);
+        else if (['color', 'color2', 'fill', 'stroke'].includes(p)) ctl.push(`<div class="col-span-1 flex items-center gap-2"><input type="color" data-l="${id}" data-p="${p}" value="${l[p]}" class="w-9 h-7 shrink-0"><label class="text-[10px] text-gray-300 leading-tight">${lab(p)}</label></div>`);
+        else if (p === 'w' || p === 'h') ctl.push(`<div class="col-span-1"><label class="text-[10px] text-gray-400">${lab(p)} (px)</label><input type="number" min="2" max="3000" data-l="${id}" data-p="${p}" value="${Math.round(l[p])}" class="w-full ${INP} text-center"></div>`);
+        else if (p === 'glow') ctl.push(`<div class="col-span-1"><label class="text-[10px] text-gray-400">${lab(p)} (px)</label><input type="number" min="0" max="100" data-l="${id}" data-p="glow" value="${l.glow || 0}" class="w-full ${INP} text-center"></div>`);
+        else if (p === 'sweep') ctl.push(`<label class="col-span-2 flex items-center gap-2 text-[11px] text-gray-300 cursor-pointer"><input type="checkbox" data-l="${id}" data-p="sweep" ${l.sweep ? 'checked' : ''} class="accent-[#FFD166]">${lab(p)}</label>`);
+      });
+      const slider = (p, label, min, max, step, val, fmt) => `
+        <div class="col-span-2">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>${label}</span><span class="font-mono text-[#DFC89D]" id="ro_${id}_${p}">${fmt(val)}</span></div>
+          <input type="range" id="in_${id}_${p}" data-l="${id}" data-p="${p}" min="${min}" max="${max}" step="${step}" value="${val}" class="w-full accent-[#FFD166] h-1.5">
+        </div>`;
+      const scalePct = Math.round((l.scale || 1) * 100);
+      const speedPct = Math.round((l.speed != null ? l.speed : 1) * 100);
+      const startSec = Number(l.start != null ? l.start : (d.start || 0)).toFixed(2);
+      let charColorSection = '';
+      if (d.kind === 'text') {
+        charColorSection = `
+          <div class="col-span-2 border-t border-[#26101c] pt-2 mt-1">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] uppercase tracking-wider text-[#FFD166] font-bold flex items-center gap-1.5">
+                <span>🎨</span> Cor por Letra (Defina quais letras ficam com cada cor)
+              </span>
+              <button type="button" onclick="resetCharColors('${id}')" class="text-[9px] px-2 py-0.5 rounded bg-[#1C0714] border border-[#3A1127] text-gray-400 hover:text-white hover:border-[#FF2E7E] transition">↺ Resetar Cores</button>
+            </div>
+            <div class="flex items-center gap-1.5 mb-2 overflow-x-auto py-0.5">
+              <span class="text-[9px] text-gray-400 shrink-0">Pincel:</span>
+              <button type="button" onclick="selectCharPalette('${id}', '${esc(l.color || '#FFFFFF')}')" class="char-pal-btn px-2 py-0.5 rounded text-[10px] font-mono border border-gray-500 bg-white text-black font-bold shadow-sm" data-layer="${id}" data-pal-color="${esc(l.color || '#FFFFFF')}">⚪ Base</button>
+              <button type="button" onclick="selectCharPalette('${id}', '${esc(l.color2 || '#FFD166')}')" class="char-pal-btn px-2 py-0.5 rounded text-[10px] font-mono border border-[#FFD166] bg-[#FFD166] text-[#12040C] font-bold shadow-sm ring-2 ring-white" data-layer="${id}" data-pal-color="${esc(l.color2 || '#FFD166')}">🟡 Destaque</button>
+              <button type="button" onclick="selectCharPalette('${id}', '#FF2E7E')" class="char-pal-btn px-2 py-0.5 rounded text-[10px] font-mono border border-[#FF2E7E] bg-[#FF2E7E] text-white font-bold shadow-sm" data-layer="${id}" data-pal-color="#FF2E7E">🌸 Rosa</button>
+              <button type="button" onclick="selectCharPalette('${id}', '#22D3EE')" class="char-pal-btn px-2 py-0.5 rounded text-[10px] font-mono border border-[#22D3EE] bg-[#22D3EE] text-[#0A1A24] font-bold shadow-sm" data-layer="${id}" data-pal-color="#22D3EE">💎 Ciano</button>
+              <label class="flex items-center gap-1 cursor-pointer" title="Pincel com cor personalizada">
+                <input type="color" id="pal_custom_${id}" value="#FFD166" onchange="selectCharPalette('${id}', this.value)" class="w-6 h-6 rounded cursor-pointer border border-gray-600 bg-transparent p-0">
+                <span class="text-[9px] text-gray-400">Custom</span>
+              </label>
+            </div>
+            <div id="char_chips_${id}" class="flex flex-wrap gap-1.5 p-2 rounded-xl bg-[#080205] border border-[#260B1A] min-h-[44px] items-center">
+              ${renderCharChipsHtml(id, l)}
+            </div>
+            <div class="text-[9px] text-gray-500 mt-1 flex items-center justify-between">
+              <span>💡 Clique em qualquer letra acima para pintar com o Pincel ativo.</span>
+              <span class="text-gray-400">Dica: use <code class="text-[#FFD166]">*palavra*</code> no texto!</span>
+            </div>
+          </div>`;
+      }
+      return `
+      <details data-card="${id}" class="rounded-xl border border-[#331123] bg-[#0E0308] ${selected === id ? 'ring-1 ring-[#22D3EE]' : ''}" ${selected === id ? 'open' : ''}>
+        <summary class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-[#DFC89D] select-none gap-2">
+          <span class="flex items-center gap-2 truncate"><span class="chev text-[10px] text-gray-500">▶</span>${d.kind === 'text' ? '🔤' : '▭'} <span class="truncate">${esc(d.label)}</span></span>
+          <span class="flex items-center gap-2 shrink-0">
+            <span id="badge_${id}_timing" class="px-1.5 py-0.5 rounded bg-[#1C0714] border border-[#381126] text-[10px] font-mono text-[#FFD166]">⏱ ${startSec}s • ${speedPct}%</span>
+            <label class="flex items-center gap-1 text-[10px] font-normal text-gray-400 cursor-pointer" onclick="event.stopPropagation()">
+              <input type="checkbox" data-l="${id}" data-p="visible" ${l.visible ? 'checked' : ''} class="accent-[#FFD166]"> visível
+            </label>
+          </span>
+        </summary>
+        <div class="px-3 pb-3 pt-1 grid grid-cols-2 gap-x-3 gap-y-2.5">
+          ${ctl.join('')}
+          ${charColorSection}
+          <div class="col-span-2 border-t border-[#26101c] pt-2 text-[10px] uppercase tracking-wider text-[#FFD166]/90 flex items-center gap-1">⏱️ Tempo &amp; Velocidade desta Camada</div>
+          ${slider('start', 'Quando inicia (segundos)', 0, 5.0, 0.05, startSec, v => Number(v).toFixed(2) + 's')}
+          ${slider('speed', 'Velocidade da animação', 25, 300, 5, speedPct, v => v + '% (' + (v / 100).toFixed(2) + 'x)')}
+          <div class="col-span-2 border-t border-[#26101c] pt-2 text-[10px] uppercase tracking-wider text-gray-500">Posição &amp; tamanho da camada</div>
+          ${slider('dx', 'Posição X (←  →)', -900, 900, 1, Math.round(l.dx), v => (v > 0 ? '+' : '') + v + 'px')}
+          ${slider('dy', 'Posição Y (↑  ↓)', -500, 500, 1, Math.round(l.dy), v => (v > 0 ? '+' : '') + v + 'px')}
+          ${slider('scale', 'Escala da camada', 20, 300, 1, scalePct, v => v + '%')}
+          <div class="col-span-2 flex justify-end"><button data-reset="${id}" class="text-[10px] px-2 py-1 rounded bg-[#1F0715] border border-[#3A1127] text-gray-300 hover:text-white hover:border-[#FF2E7E]">↺ Resetar esta camada</button></div>
+        </div>
+      </details>`;
+    }
+
+    function renderPanel() {
+      const defs = E.getDefs(cat, sub);
+      const L = E.resolve(cat, sub, { layers: ovr() });
+      $('layersPanel').innerHTML = defs.map(d => layerCard(d, L[d.id])).join('');
+      syncQuickCharChipsBar();
+    }
+
+    /* ---------- Quick Text Sync Helper (Dual Text Layers) ---------- */
+    function getTextLayers(defs, L) {
+      if (!defs || !defs.length) return { l1: null, l2: null, count: 0 };
+      const textDefs = defs.filter(x => x.kind === 'text');
+      const preferred1 = ['serif', 'line1', 'w1', 'top', 'hero', 'title'];
+      const preferred2 = ['script', 'line2', 'w2', 'slam', 'sub', 'subtitle'];
+
+      let l1 = null;
+      for (const id of preferred1) {
+        const d = textDefs.find(x => x.id === id);
+        if (d) { l1 = L[d.id] || d; break; }
+      }
+      if (!l1 && textDefs.length > 0) l1 = L[textDefs[0].id] || textDefs[0];
+
+      let l2 = null;
+      for (const id of preferred2) {
+        const d = textDefs.find(x => x.id === id);
+        if (d && (!l1 || d.id !== l1.id)) { l2 = L[d.id] || d; break; }
+      }
+      if (!l2 && textDefs.length > 1) {
+        const rem = textDefs.find(x => !l1 || x.id !== l1.id);
+        if (rem) l2 = L[rem.id] || rem;
+      }
+
+      return { l1, l2, count: textDefs.length };
+    }
+
+    function getPrimaryTextLayer(defs, L) {
+      return getTextLayers(defs, L).l1;
+    }
+
+    function syncQuickTextInput() {
+      const inp1 = $('inpQuickText');
+      const inp2 = $('inpQuickText2');
+      const wrap2 = $('quickText2Wrapper');
+      const badge1 = $('quickText1Badge');
+      const badge2 = $('quickText2Badge');
+      if (!inp1) return;
+
+      const defs = E.getDefs(cat, sub);
+      const L = E.resolve(cat, sub, { layers: ovr() });
+      const { l1, l2 } = getTextLayers(defs, L);
+
+      if (l1) {
+        inp1.value = l1.text || '';
+        inp1.disabled = false;
+        inp1.placeholder = `Linha 1 [${l1.label || l1.id}]... use *palavra* para grifar!`;
+        if (badge1) badge1.innerText = l1.label || l1.id;
+      } else {
+        inp1.value = '';
+        inp1.disabled = true;
+        inp1.placeholder = 'Este preset não possui texto editável direto';
+        if (badge1) badge1.innerText = 'Sem Texto';
+      }
+
+      if (l2 && wrap2) {
+        wrap2.classList.remove('hidden');
+        if (inp2) {
+          inp2.value = l2.text || '';
+          inp2.disabled = false;
+          inp2.placeholder = `Linha 2 [${l2.label || l2.id}]...`;
+        }
+        if (badge2) badge2.innerText = l2.label || l2.id;
+      } else if (wrap2) {
+        wrap2.classList.add('hidden');
+        if (inp2) {
+          inp2.value = '';
+          inp2.disabled = true;
+        }
+      }
+      syncQuickCharChipsBar();
+    }
+
+    function setProp(id, p, v) {
+      const o = ovr(); (o[id] = o[id] || {})[p] = v; persist();
+    }
+    function updateReadout(id, p, v) {
+      const el = $(`ro_${id}_${p}`);
+      if (el) {
+        if (p === 'scale') el.innerText = Math.round(v * 100) + '%';
+        else if (p === 'speed') el.innerText = Math.round(v * 100) + '% (' + Number(v).toFixed(2) + 'x)';
+        else if (p === 'start') el.innerText = Number(v).toFixed(2) + 's';
+        else el.innerText = (v > 0 ? '+' : '') + Math.round(v) + 'px';
+      }
+      if (p === 'start' || p === 'speed') {
+        const badge = $(`badge_${id}_timing`);
+        if (badge) {
+          const L = E.resolve(cat, sub, { layers: ovr() })[id];
+          if (L) badge.innerText = `⏱ ${Number(L.start || 0).toFixed(2)}s • ${Math.round((L.speed || 1) * 100)}%`;
+        }
+      }
+    }
+    function syncOffsets(id) {
+      const o = (ovr()[id]) || {};
+      [['dx', o.dx || 0], ['dy', o.dy || 0]].forEach(([p, v]) => {
+        const el = $(`in_${id}_${p}`); if (el) el.value = Math.round(v);
+        updateReadout(id, p, v);
+      });
+    }
+
+    /* ---------- Sistema de Cor por Letra (Per-Character Colors) ---------- */
+    let activeCharBrushColor = '#FFD166';
+
+    function isColorDark(hex) {
+      if (!hex || typeof hex !== 'string') return false;
+      const c = hex.replace('#', '');
+      if (c.length === 3) {
+        const r = parseInt(c[0] + c[0], 16), g = parseInt(c[1] + c[1], 16), b = parseInt(c[2] + c[2], 16);
+        return (r * 0.299 + g * 0.587 + b * 0.114) < 140;
+      }
+      if (c.length >= 6) {
+        const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), b = parseInt(c.slice(4, 6), 16);
+        return (r * 0.299 + g * 0.587 + b * 0.114) < 140;
+      }
+      return false;
+    }
+
+    function renderCharChipsHtml(id, l) {
+      if (!l || !l.text) return '<span class="text-[10px] text-gray-500 italic">Sem texto nesta camada</span>';
+      const tokens = E.parseCharTokens(l.text, l);
+      if (!tokens.length) return '<span class="text-[10px] text-gray-500 italic">Vazio</span>';
+      return tokens.map(tok => {
+        const isSpace = tok.ch === ' ';
+        const displayChar = isSpace ? '␣' : esc(tok.ch);
+        const col = tok.color || l.color || '#FFFFFF';
+        const isDark = isColorDark(col);
+        const textCol = isDark ? '#FFFFFF' : '#12040C';
+        const isSelectedBrush = col.toLowerCase() === activeCharBrushColor.toLowerCase();
+        const borderStyle = isSelectedBrush
+          ? 'border: 2px solid #FFFFFF; box-shadow: 0 0 8px ' + col + 'AA;'
+          : (tok.isHighlight ? 'border: 2px solid #FFD166;' : 'border: 1px solid rgba(255,255,255,0.25);');
+        return `<button type="button" onclick="handleCharChipClick('${id}', ${tok.index})" ` +
+          `class="w-7 h-7 rounded flex items-center justify-center font-black text-xs transition transform hover:scale-110 active:scale-95 cursor-pointer select-none" ` +
+          `style="background-color: ${col}; color: ${textCol}; ${borderStyle}" ` +
+          `title="Letra '${tok.ch}' (Posição ${tok.index + 1}) - Clique para pintar">${displayChar}</button>`;
+      }).join('');
+    }
+
+    function selectCharPalette(id, color) {
+      activeCharBrushColor = color;
+      document.querySelectorAll(`.char-pal-btn[data-layer="${id}"]`).forEach(btn => {
+        const isMatch = btn.dataset.palColor && btn.dataset.palColor.toLowerCase() === color.toLowerCase();
+        btn.classList.toggle('ring-2', isMatch);
+        btn.classList.toggle('ring-white', isMatch);
+      });
+      syncGlobalBrushUI(color);
+    }
+
+    function selectGlobalBrush(color) {
+      activeCharBrushColor = color;
+      syncGlobalBrushUI(color);
+      document.querySelectorAll('.char-pal-btn').forEach(btn => {
+        const isMatch = btn.dataset.palColor && btn.dataset.palColor.toLowerCase() === color.toLowerCase();
+        btn.classList.toggle('ring-2', isMatch);
+        btn.classList.toggle('ring-white', isMatch);
+      });
+    }
+
+    function syncGlobalBrushUI(color) {
+      const c = color.toLowerCase();
+      const whiteBtn = $('quickBrushWhite');
+      const goldBtn = $('quickBrushGold');
+      const pinkBtn = $('quickBrushPink');
+      const cyanBtn = $('quickBrushCyan');
+      const customInp = $('quickBrushCustom');
+      if (whiteBtn) { const m = c === '#ffffff' || c === '#fff'; whiteBtn.classList.toggle('ring-2', m); whiteBtn.classList.toggle('ring-white', m); }
+      if (goldBtn) { const m = c === '#ffd166'; goldBtn.classList.toggle('ring-2', m); goldBtn.classList.toggle('ring-white', m); }
+      if (pinkBtn) { const m = c === '#ff2e7e'; pinkBtn.classList.toggle('ring-2', m); pinkBtn.classList.toggle('ring-white', m); }
+      if (cyanBtn) { const m = c === '#22d3ee'; cyanBtn.classList.toggle('ring-2', m); cyanBtn.classList.toggle('ring-white', m); }
+      if (customInp && !['#ffffff', '#fff', '#ffd166', '#ff2e7e', '#22d3ee'].includes(c)) {
+        customInp.value = color;
+      }
+    }
+
+    function handleCharChipClick(id, charIdx) {
+      const L = E.resolve(cat, sub, { layers: ovr() });
+      const l = L[id];
+      if (!l) return;
+      const o = (ovr()[id] = ovr()[id] || {});
+      const colors = Object.assign({}, l.charColors || {});
+
+      const curColor = (colors[charIdx] !== undefined)
+        ? colors[charIdx]
+        : (l.color || '#FFFFFF');
+
+      if (String(curColor).toLowerCase() === activeCharBrushColor.toLowerCase()) {
+        const highlightCol = l.color2 || '#FFD166';
+        const baseCol = l.color || '#FFFFFF';
+        if (activeCharBrushColor.toLowerCase() === highlightCol.toLowerCase()) {
+          colors[charIdx] = baseCol;
+        } else {
+          colors[charIdx] = highlightCol;
+        }
+      } else {
+        colors[charIdx] = activeCharBrushColor;
+      }
+
+      o.charColors = colors;
+      persist();
+      updateCharChipsUI(id);
+      syncQuickCharChipsBar();
+      renderFrame(currentTime);
+      triggerLiveSyncDebounced();
+    }
+
+    function resetCharColors(id) {
+      const o = ovr()[id];
+      if (o && o.charColors) {
+        delete o.charColors;
+        persist();
+      }
+      updateCharChipsUI(id);
+      syncQuickCharChipsBar();
+      renderFrame(currentTime);
+      triggerLiveSyncDebounced();
+    }
+
+    function resetQuickCharColors() {
+      const l = getQuickCharLayer();
+      if (l) resetCharColors(l.id);
+    }
+
+    function updateCharChipsUI(id) {
+      const container = $(`char_chips_${id}`);
+      if (!container) return;
+      const L = E.resolve(cat, sub, { layers: ovr() });
+      const l = L[id];
+      if (l) container.innerHTML = renderCharChipsHtml(id, l);
+    }
+
+    function getQuickCharLayer() {
+      const defs = E.getDefs(cat, sub);
+      const L = E.resolve(cat, sub, { layers: ovr() });
+      if (selected && L[selected] && L[selected].kind === 'text') return L[selected];
+      if (L.hero && L.hero.kind === 'text') return L.hero;
+      const { l1, l2 } = getTextLayers(defs, L);
+      return l2 || l1;
+    }
+
+    function syncQuickCharChipsBar() {
+      const bar = $('quickCharChipsBar');
+      const container = $('quickCharChipsContainer');
+      const label = $('quickCharLayerLabel');
+      if (!bar || !container) return;
+
+      const l = getQuickCharLayer();
+      if (!l || l.kind !== 'text' || !l.text) {
+        bar.classList.add('hidden');
+        return;
+      }
+
+      bar.classList.remove('hidden');
+      if (label) label.innerHTML = `<span>🎨</span> <span>Cor por Letra [${esc(l.label || l.id)}]:</span>`;
+      container.innerHTML = renderCharChipsHtml(l.id, l);
+    }
+
+    const panel = $('layersPanel');
+    panel.addEventListener('input', e => {
+      const el = e.target, id = el.dataset.l, p = el.dataset.p;
+      if (!id || !p) return;
+      let v;
+      if (el.type === 'checkbox') v = el.checked;
+      else if (el.type === 'range' || el.type === 'number') {
+        v = parseFloat(el.value);
+        if (isNaN(v)) return;
+        if (p === 'scale' || p === 'speed') v = v / 100;
+      }
+      else v = el.value;
+      setProp(id, p, v);
+      if (el.type === 'range') updateReadout(id, p, v);
+      if (['font', 'size', 'text', 'color', 'color2'].includes(p)) {
+        if (p === 'text') {
+          syncQuickTextInput();
+          updateCharChipsUI(id);
+          syncQuickCharChipsBar();
+        } else if (p === 'color' || p === 'color2') {
+          updateCharChipsUI(id);
+          syncQuickCharChipsBar();
+        }
+        E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+      }
+      renderFrame(currentTime);
+      triggerLiveSyncDebounced();
+    });
+
+    /* ---------- Quick Text Input Events (Dual Lines) ---------- */
+    const quickInput1 = $('inpQuickText');
+    if (quickInput1) {
+      quickInput1.addEventListener('input', e => {
+        const defs = E.getDefs(cat, sub);
+        const L = E.resolve(cat, sub, { layers: ovr() });
+        const { l1 } = getTextLayers(defs, L);
+        if (l1) {
+          const val = e.target.value;
+          setProp(l1.id, 'text', val);
+          const cardInp = document.querySelector(`input[data-l="${l1.id}"][data-p="text"]`);
+          if (cardInp) cardInp.value = val;
+          updateCharChipsUI(l1.id);
+          syncQuickCharChipsBar();
+          E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+          renderFrame(currentTime);
+          triggerLiveSyncDebounced();
+        }
+      });
+    }
+
+    const quickInput2 = $('inpQuickText2');
+    if (quickInput2) {
+      quickInput2.addEventListener('input', e => {
+        const defs = E.getDefs(cat, sub);
+        const L = E.resolve(cat, sub, { layers: ovr() });
+        const { l2 } = getTextLayers(defs, L);
+        if (l2) {
+          const val = e.target.value;
+          setProp(l2.id, 'text', val);
+          const cardInp = document.querySelector(`input[data-l="${l2.id}"][data-p="text"]`);
+          if (cardInp) cardInp.value = val;
+          updateCharChipsUI(l2.id);
+          syncQuickCharChipsBar();
+          E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+          renderFrame(currentTime);
+          triggerLiveSyncDebounced();
+        }
+      });
+    }
+    panel.addEventListener('click', e => {
+      const rb = e.target.closest('[data-reset]');
+      if (rb) {
+        delete ovr()[rb.dataset.reset]; persist(); renderPanel(); renderFrame(currentTime); triggerLiveSyncDebounced(); return;
+      }
+      const card = e.target.closest('[data-card]');
+      if (card) select(card.dataset.card, false);
+    });
+
+    function resetAllLayers() {
+      delete store[key()]; persist(); selected = null; renderPanel(); renderFrame(currentTime); triggerLiveSyncDebounced();
+    }
+
+    function select(id, fromCanvas) {
+      selected = id;
+      panel.querySelectorAll('[data-card]').forEach(c => {
+        const on = c.dataset.card === id;
+        c.classList.toggle('ring-1', on); c.classList.toggle('ring-[#22D3EE]', on);
+        if (on && fromCanvas) { c.open = true; c.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+      });
+      syncQuickCharChipsBar();
+      renderFrame(currentTime);
+    }
+
+    /* ---------- Arrastar camadas direto no preview ---------- */
+    function toCanvas(e) {
+      const r = canvas.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * CW / r.width, y: (e.clientY - r.top) * CH / r.height };
+    }
+    function hitTest(p) {
+      for (let i = E.hits.length - 1; i >= 0; i--) {
+        const h = E.hits[i];
+        if (p.x >= h.x0 - 6 && p.x <= h.x1 + 6 && p.y >= h.y0 - 6 && p.y <= h.y1 + 6) return h;
+      }
+      return null;
+    }
+    canvas.addEventListener('mousedown', e => {
+      const p = toCanvas(e);
+      const h = hitTest(p);
+      if (!h) { selected = null; panel.querySelectorAll('[data-card]').forEach(c => { c.classList.remove('ring-1', 'ring-[#22D3EE]'); }); renderFrame(currentTime); return; }
+      if (isPlaying) togglePlay();
+      select(h.id, true);
+      const o = ovr()[h.id] || {};
+      drag = { id: h.id, px: p.x, py: p.y, dx0: o.dx || 0, dy0: o.dy || 0 };
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      const p = toCanvas(e);
+      if (drag) {
+        const gs = parseFloat($('sliderScale').value) || 1;
+        setProp(drag.id, 'dx', Math.round(drag.dx0 + (p.x - drag.px) / gs));
+        setProp(drag.id, 'dy', Math.round(drag.dy0 + (p.y - drag.py) / gs));
+        syncOffsets(drag.id);
+        renderFrame(currentTime);
+      } else if (e.target === canvas) {
+        canvas.style.cursor = hitTest(p) ? 'move' : 'default';
+      }
+    });
+    window.addEventListener('mouseup', () => {
+      if (drag) {
+        drag = null;
+        triggerLiveSyncDebounced();
+      }
+    });
+    window.addEventListener('keydown', e => {
+      if (!selected) return;
+      const t = e.target.tagName;
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(t)) return;
+      const step = e.shiftKey ? 10 : 1;
+      const o = ovr()[selected] || {};
+      let dx = o.dx || 0, dy = o.dy || 0, hit = true;
+      if (e.key === 'ArrowLeft') dx -= step; else if (e.key === 'ArrowRight') dx += step;
+      else if (e.key === 'ArrowUp') dy -= step; else if (e.key === 'ArrowDown') dy += step; else hit = false;
+      if (!hit) return;
+      e.preventDefault();
+      setProp(selected, 'dx', dx); setProp(selected, 'dy', dy);
+      syncOffsets(selected); renderFrame(currentTime);
+      triggerLiveSyncDebounced();
+    });
+
+    /* ---------- Timeline & Velocidade Global ---------- */
+    function setPosX(v) { $('sliderPosX').value = v; updateLabels(); renderFrame(currentTime); triggerLiveSyncDebounced(); }
+    function setPosY(v) { $('sliderPosY').value = v; updateLabels(); renderFrame(currentTime); triggerLiveSyncDebounced(); }
+    function setGlobalSpeed(v) { $('sliderGlobalSpeed').value = v; updateLabels(); renderFrame(currentTime); triggerLiveSyncDebounced(); }
+    function resetGlobalTiming() {
+      $('sliderGlobalSpeed').value = 1.0;
+      $('sliderGlobalDelay').value = 0;
+      updateLabels();
+      renderFrame(currentTime);
+      triggerLiveSyncDebounced();
+    }
+    function updateLabels() {
+      $('valScale').innerText = Math.round(parseFloat($('sliderScale').value) * 100) + '%';
+      $('valPosY').innerText = Math.round(parseFloat($('sliderPosY').value) * 100) + '%';
+      $('valPosX').innerText = Math.round(parseFloat($('sliderPosX').value) * 100) + '%';
+      const gs = parseFloat($('sliderGlobalSpeed').value) || 1;
+      $('valGlobalSpeed').innerText = `${Math.round(gs * 100)}% (${gs.toFixed(2)}x)`;
+      const gd = parseFloat($('sliderGlobalDelay').value) || 0;
+      $('valGlobalDelay').innerText = `${gd.toFixed(2)}s`;
+    }
+    function updateTimecode() {
+      const dur = parseFloat($('inpDuration').value) || 3.0;
+      $('timecodeDisplay').innerText = currentTime.toFixed(2) + 's / ' + dur.toFixed(2) + 's';
+      $('timelineScrubber').value = currentTime;
+    }
+    function loop(ts) {
+      if (!lastTs) lastTs = ts;
+      const dt = (ts - lastTs) / 1000; lastTs = ts;
+      if (isPlaying) {
+        const dur = parseFloat($('inpDuration').value) || 3.0;
+        currentTime += dt;
+        if (currentTime > dur) currentTime = 0;
+        updateTimecode();
+        renderFrame(currentTime);
+      }
+      requestAnimationFrame(loop);
+    }
+    function togglePlay() { isPlaying = !isPlaying; $('btnPlayPause').innerText = isPlaying ? '⏸' : '▶'; }
+    function seekTo(sec) { currentTime = sec; updateTimecode(); renderFrame(sec); }
+    function seekRest() {
+      const gs = parseFloat($('sliderGlobalSpeed').value) || 1;
+      const gd = parseFloat($('sliderGlobalDelay').value) || 0;
+      const dur = parseFloat($('inpDuration').value) || 3.0;
+      const target = Math.min(dur - 0.15, gd + (model().rest / gs));
+      seekTo(Math.max(0, target));
+    }
+    $('timelineScrubber').addEventListener('input', e => seekTo(parseFloat(e.target.value)));
+    ['sliderPosX', 'sliderPosY', 'sliderScale', 'sliderGlobalSpeed', 'sliderGlobalDelay', 'inpDuration'].forEach(id => {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        const dur = parseFloat($('inpDuration').value) || 3.0;
+        $('timelineScrubber').max = dur;
+        updateLabels();
+        updateTimecode();
+        renderFrame(currentTime);
+        triggerLiveSyncDebounced();
+      });
+      el.addEventListener('change', () => {
+        triggerLiveSyncDebounced();
+      });
+    });
+
+    /* ---------- Pastas & Histórico de Outputs ---------- */
+    async function openFolder(folder, fileName) {
+      const statusBox = $('statusBox');
+      try {
+        const res = await fetch('/api/open-folder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folder, fileName })
+        });
+        const data = await res.json();
+        if (data && data.openedPath) {
+          statusBox.classList.remove('hidden');
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-cyan-950/40 border border-cyan-700/50 text-cyan-200';
+          statusBox.innerText = `📂 Pasta aberta à frente da tela!\n📍 Local: ${data.openedPath}`;
+        }
+      } catch (e) {}
+    }
+    function openLastFileInFolder() {
+      if (lastRenderedFile) openFolder('outputs', lastRenderedFile);
+      else openFolder('outputs');
+    }
+    async function loadRecentOutputs() {
+      try {
+        const res = await fetch('/api/outputs');
+        const data = await res.json();
+        const box = $('recentOutputsList');
+        if (!data.files || !data.files.length) {
+          box.innerHTML = '<span class="text-gray-500 text-[11px]">Nenhum vídeo renderizado ainda nesta sessão.</span>';
+          return;
+        }
+        box.innerHTML = data.files.slice(0, 6).map(f => `
+          <div class="flex items-center justify-between bg-[#0E0308] border border-[#280D1B] rounded-lg px-2.5 py-1.5 gap-2">
+            <div class="truncate text-[11px] font-mono text-gray-300" title="${esc(f.fileName)}">${esc(f.fileName)} <span class="text-gray-500">(${f.sizeMB} MB)</span></div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="${f.downloadUrl}" download class="px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-700/50 text-emerald-300 hover:bg-emerald-900 text-[10px]">⬇ Baixar</a>
+              <button onclick="openFolder('outputs','${esc(f.fileName)}')" class="px-2 py-0.5 rounded bg-[#1F0715] border border-[#3A1127] text-[#FFD166] hover:border-[#FFD166] text-[10px]" title="Mostrar este arquivo na pasta">📂 Mostrar</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {}
+    }
+
+    /* ---------- Premiere & Live-Link Live Sync ---------- */
+    let currentSyncMediaPath = null;
+    let isCherryClipSelected = false;
+    let selectedClipData = null;
+    let userHasUnlinked = false;
+
+    // Helper to evaluate ExtendScript in Premiere (direct CEP, parent iframe postMessage, or server fallback)
+    function evalExtendScript(script) {
+      return new Promise((resolve) => {
+        if (window.__adobe_cep__) {
+          window.__adobe_cep__.evalScript(script, (raw) => {
+            try { resolve(JSON.parse(raw)); } catch (e) { resolve({ data: raw }); }
+          });
+        } else if (window.parent && window.parent !== window) {
+          const reqId = 'eval_' + Date.now() + '_' + Math.random();
+          const handler = (ev) => {
+            if (ev.data && ev.data.type === 'EVAL_RESULT' && ev.data.id === reqId) {
+              window.removeEventListener('message', handler);
+              resolve(ev.data.result);
+            }
+          };
+          window.addEventListener('message', handler);
+          window.parent.postMessage({ type: 'EVAL_SCRIPT', id: reqId, script }, '*');
+        } else {
+          fetch('/api/premiere-eval', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ script })
+          }).then(r => r.json()).then(resolve).catch(err => resolve({ error: err.message }));
+        }
+      });
+    }
+
+    async function checkPremiere() {
+      try {
+        const res = await fetch('/api/premiere-status');
+        const data = await res.json();
+        if (data && !data.offline && data.hasSeq !== undefined) {
+          applyPremiereStatusUI(data);
+          return;
+        }
+      } catch (e) {}
+
+      // Fallback via ExtendScript directly in CEP
+      if (window.__adobe_cep__ || (window.parent && window.parent !== window)) {
+        try {
+          const direct = await evalExtendScript('CherryExtendScript.getSequenceInfo()');
+          let parsed = typeof direct === 'string' ? JSON.parse(direct) : direct;
+          if (parsed && typeof parsed === 'object' && parsed.hasSeq !== undefined) {
+            applyPremiereStatusUI(parsed);
+            return;
+          }
+        } catch(e){}
+      }
+
+      applyPremiereStatusUI({ offline: true, hasSeq: false });
+    }
+
+    function applyPremiereStatusUI(data) {
+      const dot = $('prStatusDot'), txt = $('prStatusText'), seqTxt = $('prSeqText');
+      if (data && data.hasSeq) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+        txt.innerText = 'Premiere Pro Online';
+        seqTxt.innerText = `Seq: ${data.seqName} (${data.fps} FPS) | Agulha: ${data.playhead}s`;
+      } else if (data && !data.offline) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+        txt.innerText = 'Premiere Pro Conectado';
+        seqTxt.innerText = data.prName || 'Abra uma sequência para injeção direta';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400';
+        txt.innerText = 'Modo Portátil Standalone';
+        seqTxt.innerText = 'Exportação direta em .MOV ProRes 4444';
+      }
+    }
+
+    async function checkSelectedClip() {
+      try {
+        const res = await fetch('/api/selected-clip');
+        const data = await res.json();
+        if (data && !data.offline && data.hasSeq !== undefined) {
+          updateLiveLinkUI(data);
+          return;
+        }
+      } catch (e) {}
+
+      // Fallback via ExtendScript directly in CEP
+      if (window.__adobe_cep__ || (window.parent && window.parent !== window)) {
+        try {
+          const direct = await evalExtendScript('CherryExtendScript.getSelectedClipInfo()');
+          let info = typeof direct === 'string' ? JSON.parse(direct) : direct;
+          if (info && typeof info === 'object' && info.hasSeq !== undefined) {
+            if (info.hasSelection && info.mediaPath) {
+              try {
+                const metaRes = await fetch('/api/clip-metadata?path=' + encodeURIComponent(info.mediaPath));
+                const metaData = await metaRes.json();
+                if (metaData && metaData.found) {
+                  info.isCherry = true;
+                  info.metadata = metaData.metadata;
+                } else {
+                  const base = info.mediaPath.split(/[\\/]/).pop();
+                  info.isCherry = base.toLowerCase().startsWith('cherrymotion');
+                }
+              } catch(e){}
+            } else if (info.hasSelection && info.clipName) {
+              info.isCherry = info.clipName.toLowerCase().startsWith('cherrymotion');
+            }
+            updateLiveLinkUI(info);
+            return;
+          }
+        } catch(e){}
+      }
+
+      updateLiveLinkUI({ offline: true, hasSeq: false });
+    }
+
+    async function checkAutoReload() {
+      try {
+        const res = await fetch('/api/check-reload');
+        const data = await res.json();
+        if (data && data.reload) {
+          window.location.reload();
+        }
+      } catch(e){}
+    }
+
+    function updateLiveLinkUI(data) {
+      const card = $('liveLinkCard');
+      const dot = $('liveLinkDot');
+      const title = $('liveLinkTitle');
+      const badge = $('liveLinkBadge');
+      const details = $('liveLinkDetails');
+      const actions = $('liveLinkActions');
+      const btnText = $('btnText');
+      const btnInsertNew = $('btnInsertNew');
+
+      if (!data || data.offline || !data.hasSeq) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-gray-500';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-[#240A17] text-gray-400 border border-[#3A1127]';
+        badge.innerText = 'Offline';
+        title.innerText = 'Premiere Pro Desconectado';
+        details.innerText = 'Abra o Premiere Pro com uma sequência para ativar o Live-Link.';
+        actions.classList.add('hidden');
+        btnInsertNew.classList.add('hidden');
+        if (!isRendering) btnText.innerText = '🎬 EXPORTAR & INSERIR NA TIMELINE';
+        isCherryClipSelected = false;
+        return;
+      }
+
+      if (!data.hasSelection) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400/80 animate-pulse';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-[#240A17] text-[#FFD166] border border-[#3A1127]';
+        badge.innerText = 'Aguardando';
+        title.innerText = 'Live-Link Pronto (Nenhum Clipe Selecionado)';
+        details.innerText = 'Clique em qualquer clipe Cherry na timeline para carregar seus textos e cores em tempo real.';
+        actions.classList.add('hidden');
+        btnInsertNew.classList.add('hidden');
+        if (!isRendering) btnText.innerText = '🎬 EXPORTAR & INSERIR NA TIMELINE';
+        isCherryClipSelected = false;
+        currentSyncMediaPath = null;
+        userHasUnlinked = false;
+        return;
+      }
+
+      // Clip is selected on the timeline!
+      const clipName = data.clipName || 'Clipe Selecionado';
+      const mediaPath = data.mediaPath || '';
+      selectedClipData = data;
+
+      if (data.isCherry) {
+        isCherryClipSelected = true;
+        card.className = 'bg-[#180914] border border-[#FF2E7E]/50 rounded-2xl p-4 shadow-xl shadow-[#FF2E7E]/10 flex flex-col gap-2.5 transition';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-md shadow-emerald-400/50 animate-pulse';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/50 font-bold';
+        badge.innerText = '🔗 LIVE-LINK ATIVO';
+        title.innerHTML = `<span class="text-white">Clipe na Timeline:</span> <span class="text-[#FFD166] font-mono">${esc(clipName)}</span>`;
+
+        const subLabel = data.metadata ? `${data.metadata.cat || ''} > ${data.metadata.sub || ''}` : 'Animação Cherry';
+        details.innerHTML = `<span class="text-gray-300">Modo: <strong class="text-[#DFC89D]">${subLabel}</strong></span> • <em>Edições serão aplicadas diretamente neste clipe sem perder cortes nem efeitos!</em>`;
+        actions.classList.remove('hidden');
+
+        if (!isRendering) {
+          btnText.innerText = '⚡ ATUALIZAR ANIMAÇÃO NA TIMELINE';
+        }
+        btnInsertNew.classList.remove('hidden');
+
+        // Check if selection changed to a DIFFERENT Cherry clip -> Auto-populate UI!
+        if (mediaPath && mediaPath !== currentSyncMediaPath && !userHasUnlinked) {
+          currentSyncMediaPath = mediaPath;
+          if (data.metadata) {
+            applyClipMetadataToStudio(data.metadata);
+          }
+        }
+      } else {
+        // Non-Cherry clip selected
+        isCherryClipSelected = false;
+        currentSyncMediaPath = null;
+        card.className = 'bg-[#15050F] border border-[#3A1229] rounded-2xl p-4 shadow-xl flex flex-col gap-2.5 transition';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-[#1C0F24] text-cyan-300 border border-[#331C44]';
+        badge.innerText = 'Clipe Externo';
+        title.innerHTML = `<span class="text-gray-300">Clipe Selecionado:</span> <span class="text-white font-mono">${esc(clipName)}</span>`;
+        details.innerText = 'Este clipe não foi gerado pelo Cherry Motion Studio. O render criará um novo motion na agulha.';
+        actions.classList.add('hidden');
+        btnInsertNew.classList.add('hidden');
+        if (!isRendering) btnText.innerText = '🎬 EXPORTAR & INSERIR NA TIMELINE';
+      }
+    }
+
+    function applyClipMetadataToStudio(meta) {
+      if (!meta) return;
+      const targetCat = (meta.cat && meta.cat !== 'update') ? meta.cat : (meta.mode !== 'update' ? meta.mode : null);
+      const targetSub = meta.sub || meta.subType;
+
+      if (targetCat && targetSub && SUITES[targetCat]) {
+        cat = targetCat;
+        sub = targetSub;
+      }
+      selectModel(cat, sub);
+
+      if (meta.layers) {
+        store[key()] = JSON.parse(JSON.stringify(meta.layers));
+      }
+      if (meta.posX !== undefined) $('sliderPosX').value = meta.posX;
+      if (meta.posY !== undefined) $('sliderPosY').value = meta.posY;
+      if (meta.globalScale !== undefined) $('sliderScale').value = meta.globalScale;
+      if (meta.globalSpeed !== undefined) $('sliderGlobalSpeed').value = meta.globalSpeed;
+      if (meta.globalDelay !== undefined) $('sliderGlobalDelay').value = meta.globalDelay;
+      if (meta.duration !== undefined) {
+        $('inpDuration').value = meta.duration;
+        $('timelineScrubber').max = meta.duration;
+      }
+      if (meta.fps !== undefined) $('selFps').value = meta.fps;
+
+      updateLabels();
+      renderPanel();
+      syncQuickTextInput();
+      E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+    }
+
+    function unlinkSelectedClip() {
+      userHasUnlinked = true;
+      isCherryClipSelected = false;
+      currentSyncMediaPath = null;
+      $('liveLinkActions').classList.add('hidden');
+      $('btnInsertNew').classList.add('hidden');
+      $('btnText').innerText = '🎬 EXPORTAR & INSERIR NA TIMELINE';
+      $('liveLinkBadge').innerText = 'Desconectado';
+      $('liveLinkDetails').innerText = 'Clipe desconectado manualmente. O próximo render gerará uma nova mídia.';
+    }
+
+    /* ---------- TURBO DIRECT-PIPE ENGINE (Sub-Second Ingestion via image2pipe) ---------- */
+    let isTurboRendering = false;
+
+    async function renderTurboDirectPipe(options = {}) {
+      if (isTurboRendering) return;
+      isTurboRendering = true;
+
+      const isUpdate = Boolean(options.updateMode && (options.targetClipMediaPath || currentSyncMediaPath));
+      const targetMediaPath = options.targetClipMediaPath || (options.updateMode ? currentSyncMediaPath : null);
+
+      const btnHero = $('btnInsertTurboHero');
+      const btnQuick = $('btnQuickInsertMogrt');
+      const qSpinner = $('quickInsertSpinner');
+      const qIcon = $('quickInsertIcon');
+      const qText = $('quickInsertText');
+      const heroSpinner = $('btnTurboSpinner');
+      const heroIcon = $('btnTurboIcon');
+      const heroText = $('btnTurboText');
+      const statusBox = $('statusBox');
+
+      if (qSpinner) qSpinner.classList.remove('hidden');
+      if (qIcon) qIcon.classList.add('hidden');
+      if (qText) qText.innerText = isUpdate ? 'Sincronizando...' : 'Renderizando...';
+      if (heroSpinner) heroSpinner.classList.remove('hidden');
+      if (heroIcon) heroIcon.classList.add('hidden');
+      if (heroText) heroText.innerText = isUpdate ? 'ATUALIZANDO NA TIMELINE...' : 'GERANDO TURBO (PRORES 4444)...';
+      if (btnQuick) btnQuick.disabled = true;
+      if (btnHero) btnHero.disabled = true;
+
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+      statusBox.innerText = `⚡ TURBO DIRECT-PIPE: Gerando frames direto do preview e transmitindo para FFmpeg...`;
+
+      try {
+        const cfg = curCfg();
+        const fps = parseFloat($('selFps').value) || 29.97;
+        const duration = cfg.duration || 3.0;
+        const totalFrames = Math.ceil(duration * fps);
+        const catToDraw = (cfg.cat && cfg.cat !== 'update') ? cfg.cat : cat;
+        const subToDraw = cfg.subType || cfg.sub || sub;
+
+        await E.preload(catToDraw, subToDraw, cfg);
+
+        const off = document.createElement('canvas');
+        off.width = CW;
+        off.height = CH;
+        const octx = off.getContext('2d');
+
+        const frameBlobs = [];
+        const t0 = performance.now();
+
+        for (let i = 0; i < totalFrames; i++) {
+          const t = i / fps;
+          octx.clearRect(0, 0, CW, CH);
+          E.draw(octx, catToDraw, subToDraw, t, cfg);
+          const blob = await new Promise(r => off.toBlob(r, 'image/png'));
+          frameBlobs.push(blob);
+        }
+
+        const tFrames = (performance.now() - t0).toFixed(0);
+        statusBox.innerText = `⚡ ${totalFrames} frames gerados em ${tFrames}ms. Codificando ProRes 4444 com canal alfa direto no Premiere...`;
+
+        const combinedBlob = new Blob(frameBlobs, { type: 'application/octet-stream' });
+
+        const payloadConfig = {
+          cat: catToDraw,
+          sub: subToDraw,
+          fps: fps,
+          duration: duration,
+          layers: JSON.parse(JSON.stringify(cfg.layers)),
+          posX: cfg.posX,
+          posY: cfg.posY,
+          globalScale: cfg.globalScale,
+          globalSpeed: cfg.globalSpeed,
+          globalDelay: cfg.globalDelay,
+          updateMode: isUpdate,
+          action: isUpdate ? 'update' : 'render',
+          targetClipMediaPath: targetMediaPath,
+          injectPremiere: $('chkInjectPremiere') ? $('chkInjectPremiere').checked : true,
+          insertAtPlayhead: $('chkAtPlayhead') ? $('chkAtPlayhead').checked : true,
+          saveToLibrary: $('chkSaveLibrary') ? $('chkSaveLibrary').checked : true,
+          targetTrack: 1
+        };
+
+        const res = await fetch('/api/turbo-render?config=' + encodeURIComponent(JSON.stringify(payloadConfig)), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'x-cherry-config': encodeURIComponent(JSON.stringify(payloadConfig))
+          },
+          body: combinedBlob
+        });
+
+        const result = await res.json();
+
+        if (result && result.success) {
+          lastRenderedFile = result.fileName;
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
+          let msg = `✨ TURBO SUCESSO! ProRes 4444 com canal alfa entregue no Premiere!\n` +
+            `📁 Arquivo: ${result.fileName} (${result.sizeMB} MB)\n` +
+            `⏱️ Tempo Total: ${result.durationMs || result.totalDurationMs || 0}ms (Frames: ${tFrames}ms)\n` +
+            `🎯 Visual 100% idêntico ao Live Preview (cursivas douradas, swash ribbon e partículas preservados!)`;
+
+          if (result.premiere && result.premiere.success) {
+            if (result.premiere.updated) {
+              msg += `\n⚡ HOT-SWAP ATIVO: Clipe atualizado no Premiere sem perder posição, cortes ou escala!`;
+              currentSyncMediaPath = result.outputPath;
+              if (selectedClipData) selectedClipData.mediaPath = result.outputPath;
+            } else if (result.premiere.placedAt !== undefined) {
+              msg += `\n🎯 Inserido na agulha no segundo ${result.premiere.placedAt.toFixed(2)}s (Trilha V${result.premiere.track + 1})!`;
+              currentSyncMediaPath = result.outputPath;
+              if (selectedClipData) selectedClipData.mediaPath = result.outputPath;
+            }
+          } else if (result.premiere && result.premiere.error) {
+            msg += `\n⚠️ Aviso Premiere: ${result.premiere.error}`;
+          }
+          statusBox.innerText = msg;
+          if ($('lastRenderActions')) $('lastRenderActions').classList.remove('hidden');
+          if ($('btnDownloadLast')) {
+            $('btnDownloadLast').href = result.downloadUrl;
+            $('btnDownloadLast').setAttribute('download', result.fileName);
+          }
+          loadRecentOutputs();
+          checkSelectedClip();
+          return result;
+        } else {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+          statusBox.innerText = `❌ Falha no Turbo Render: ${result.error || 'Erro desconhecido'}`;
+          return result;
+        }
+      } catch (err) {
+        statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+        statusBox.innerText = `❌ Erro de conexão Turbo: ${err.message}`;
+        return { success: false, error: err.message };
+      } finally {
+        isTurboRendering = false;
+        if (qSpinner) qSpinner.classList.add('hidden');
+        if (qIcon) qIcon.classList.remove('hidden');
+        if (qText) qText.innerText = 'Inserir na Timeline';
+        if (heroSpinner) heroSpinner.classList.add('hidden');
+        if (heroIcon) heroIcon.classList.remove('hidden');
+        if (heroText) heroText.innerText = isCherryClipSelected ? '⚡ ATUALIZAR NA TIMELINE (TURBO)' : 'INSERIR NA TIMELINE (TURBO 100% IDÊNTICO)';
+        if (btnQuick) btnQuick.disabled = false;
+        if (btnHero) btnHero.disabled = false;
+      }
+    }
+
+    function handleQuickInsertClick() {
+      if (isCherryClipSelected && currentSyncMediaPath && !userHasUnlinked) {
+        renderTurboDirectPipe({ updateMode: true, targetClipMediaPath: currentSyncMediaPath });
+      } else {
+        renderTurboDirectPipe({ updateMode: false });
+      }
+    }
+
+    function handleMainRenderClick() {
+      handleQuickInsertClick();
+    }
+
+    function handleInsertNewClick() {
+      renderTurboDirectPipe({ updateMode: false });
+    }
+
+    let isRendering = false;
+
+    async function startRender(options = {}) {
+      if (isRendering) return;
+      isRendering = true;
+
+      const isUpdate = Boolean(options.updateMode && options.targetClipMediaPath);
+      const targetMediaPath = options.targetClipMediaPath || null;
+
+      const btn = $('btnRender'), spinner = $('btnSpinner'), icon = $('btnIcon'), text = $('btnText'), statusBox = $('statusBox');
+      btn.disabled = true; spinner.classList.remove('hidden'); icon.classList.add('hidden');
+      $('lastRenderActions').classList.add('hidden');
+      text.innerText = isUpdate ? 'ATUALIZANDO CLIPE NA TIMELINE...' : 'RENDERIZANDO EM PRORES 4444 (ALFA)...';
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+      statusBox.innerText = 'Capturando quadros em alta definição + codificando ProRes 4444 (yuva444p10le)...';
+
+      const cfg = curCfg();
+      const payload = {
+        mode: cat,
+        cat: cat,
+        subType: sub,
+        sub: sub,
+        action: isUpdate ? 'update' : 'render',
+        updateMode: isUpdate,
+        targetClipMediaPath: targetMediaPath,
+        layers: JSON.parse(JSON.stringify(cfg.layers)),
+        posX: cfg.posX, posY: cfg.posY, globalScale: cfg.globalScale,
+        globalSpeed: cfg.globalSpeed, globalDelay: cfg.globalDelay,
+        duration: cfg.duration, fps: parseFloat($('selFps').value),
+        injectPremiere: $('chkInjectPremiere').checked,
+        insertAtPlayhead: $('chkAtPlayhead').checked,
+        saveToLibrary: $('chkSaveLibrary').checked
+      };
+
+      try {
+        let result = null;
+        try {
+          const res = await fetch('/api/render-motion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          result = await res.json();
+        } catch (fetchErr) {
+          result = { success: false, error: 'USE_CLIENT_RENDER' };
+        }
+
+        if (!result || (!result.success && (result.error === 'USE_CLIENT_RENDER' || !result.outputPath))) {
+          console.log('[Studio Render] Usando motor de renderização nativo Turbo Direct-Pipe...');
+          result = await renderTurboDirectPipe(payload);
+          return;
+        }
+        if (result.success) {
+          lastRenderedFile = result.fileName;
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
+          let msg = `✅ Vídeo ProRes 4444 gerado com sucesso! (${result.sizeMB || ''} MB)\n📄 Arquivo: ${result.fileName}`;
+
+          if (result.premiere && result.premiere.success) {
+            if (result.premiere.updated) {
+              msg += `\n⚡ SUCESSO: Clipe atualizado instantaneamente na timeline (Hot-Swap in-place)!\n🎯 Cortes, escala, posição, keyframes e efeitos preservados 100%!`;
+              currentSyncMediaPath = result.outputPath; // Update current sync path to new media
+              if (selectedClipData) selectedClipData.mediaPath = result.outputPath;
+            } else if (result.premiere.placedAt !== undefined) {
+              msg += `\n🎯 Injetado na timeline do Premiere Pro no segundo ${result.premiere.placedAt.toFixed(2)}s (Trilha V${result.premiere.track + 1})!`;
+              currentSyncMediaPath = result.outputPath;
+              if (selectedClipData) selectedClipData.mediaPath = result.outputPath;
+            }
+          } else if (result.premiere && result.premiere.error) {
+            msg += `\n⚠️ Aviso Premiere: ${result.premiere.error}`;
+          } else {
+            msg += `\n💡 Use os botões abaixo para baixar o .MOV ou abrir direto na pasta!`;
+          }
+
+          statusBox.innerText = msg;
+          $('btnDownloadLast').href = result.downloadUrl;
+          $('btnDownloadLast').setAttribute('download', result.fileName);
+          $('lastRenderActions').classList.remove('hidden');
+          loadRecentOutputs();
+        } else {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+          statusBox.innerText = `❌ Erro: ${result.error}`;
+        }
+      } catch (err) {
+        statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+        statusBox.innerText = `❌ Falha: ${err.message}`;
+      } finally {
+        isRendering = false;
+        btn.disabled = false; spinner.classList.add('hidden'); icon.classList.remove('hidden');
+        text.innerText = isCherryClipSelected ? '⚡ ATUALIZAR ANIMAÇÃO NA TIMELINE' : '🎬 EXPORTAR & INSERIR NA TIMELINE';
+      }
+    }
+
+    /* ---------- CHERRY MOTION STUDIO 2.0: MOGRT NATIVE ENGINE ---------- */
+
+    function getMogrtParamsPayload() {
+      const params = {};
+      const defs = E.getDefs(cat, sub);
+      const L = E.resolve(cat, sub, { layers: ovr() });
+
+      defs.forEach(d => {
+        const layer = L[d.id];
+        if (!layer) return;
+        if (layer.text) {
+          params[d.id] = layer.text;
+          if (d.label) params[d.label] = layer.text;
+        }
+        if (layer.color) params[d.id + '_color'] = layer.color;
+        if (layer.color2) params[d.id + '_color2'] = layer.color2;
+      });
+
+      // Semantic mappings
+      if (params.serif) { params.line1 = params.serif; params.t1 = params.serif; }
+      if (params.script) { params.line2 = params.script; params.t2 = params.script; }
+      if (params.w1) { params.line1 = params.w1; params.t1 = params.w1; }
+      if (params.w2) { params.line2 = params.w2; params.t2 = params.w2; }
+      if (params.top) { params.line1 = params.top; params.t1 = params.top; }
+      if (params.slam) { params.line2 = params.slam; params.t2 = params.slam; }
+
+      const qVal1 = ($('inpQuickText') ? $('inpQuickText').value : '').trim();
+      const qVal2 = ($('inpQuickText2') ? $('inpQuickText2').value : '').trim();
+      if (qVal1) {
+        params.line1 = qVal1;
+        params.t1 = qVal1;
+        params.serif = qVal1;
+        params.top = qVal1;
+        params.w1 = qVal1;
+      }
+      if (qVal2) {
+        params.line2 = qVal2;
+        params.t2 = qVal2;
+        params.script = qVal2;
+        params.slam = qVal2;
+        params.w2 = qVal2;
+      }
+
+      return params;
+    }
+
+    let liveSyncTimer = null;
+    function triggerLiveSyncDebounced() {
+      if (!$('chkLiveSyncTyping') || !$('chkLiveSyncTyping').checked) return;
+      clearTimeout(liveSyncTimer);
+      liveSyncTimer = setTimeout(() => {
+        executeLiveSync();
+      }, 400);
+    }
+    const triggerLiveMogrtSyncDebounced = triggerLiveSyncDebounced;
+
+    async function executeLiveSync() {
+      if (isCherryClipSelected && currentSyncMediaPath && !userHasUnlinked) {
+        renderTurboDirectPipe({ updateMode: true, targetClipMediaPath: currentSyncMediaPath });
+      } else {
+        executeLiveMogrtSync();
+      }
+    }
+
+    async function executeLiveMogrtSync() {
+      try {
+        const params = getMogrtParamsPayload();
+        if (window.__adobe_cep__) {
+          const escPayload = JSON.stringify({ params }).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          evalExtendScript(`CherryExtendScript.updateSelectedMogrtParams("${escPayload}")`);
+          return;
+        }
+        fetch('/api/mogrts/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ params })
+        }).catch(() => {});
+      } catch(e){}
+    }
+
+    let isMogrtInserting = false;
+    async function handleInsertMogrtClick() {
+      if (isMogrtInserting) return;
+      isMogrtInserting = true;
+
+      const btnHero = $('btnInsertMogrtHero');
+      const btnSpinner = $('btnMogrtSpinner');
+      const btnIcon = $('btnMogrtIcon');
+      const btnText = $('btnMogrtText');
+      const statusBox = $('statusBox');
+
+      if (btnHero) {
+        btnHero.disabled = true;
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
+        if (btnIcon) btnIcon.classList.add('hidden');
+        if (btnText) btnText.innerText = 'INSERINDO MOGRT NA TIMELINE (0ms)...';
+      }
+
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+      statusBox.innerText = `Inserindo MOGRT [${cat}/${sub}] nativamente no Premiere Pro (sem espera de render)...`;
+
+      const durationSec = parseFloat($('inpDuration').value) || 3.0;
+      const trackOffset = 1;
+      const params = getMogrtParamsPayload();
+
+      const payload = {
+        cat: cat,
+        sub: sub,
+        durationSec: durationSec,
+        videoTrackOffset: trackOffset,
+        audioTrackOffset: 0,
+        clipName: `Cherry - ${model() ? model().label : sub}`,
+        params: params
+      };
+
+      try {
+        const res = await fetch('/api/mogrts/insert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+
+        if (result && result.success) {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
+          statusBox.innerText = `⚡ SUCESSO NATIVO: MOGRT inserido na timeline!\n📄 Template: Cherry - ${model() ? model().label : sub}\n🎯 Trilha: V${(result.track !== undefined ? result.track : trackOffset) + 1} • Posição: ${Number(result.start || 0).toFixed(2)}s • Duração: ${Number(result.duration || durationSec).toFixed(2)}s\n✨ Edição 100% nativa em Essential Graphics (0ms de espera)!`;
+          checkSelectedClip();
+        } else {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+          statusBox.innerText = `❌ Aviso Premiere: ${result.error || 'Falha ao inserir MOGRT'}\nVerifique se há uma sequência aberta no Premiere Pro.`;
+        }
+      } catch (err) {
+        statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+        statusBox.innerText = `❌ Erro de conexão: ${err.message}`;
+      } finally {
+        isMogrtInserting = false;
+        if (btnHero) {
+          btnHero.disabled = false;
+          if (btnSpinner) btnSpinner.classList.add('hidden');
+          if (btnIcon) btnIcon.classList.remove('hidden');
+          if (btnText) btnText.innerText = 'INSERIR MOGRT NA TIMELINE (0ms)';
+        }
+      }
+    }
+
+    async function handleUpdateMogrtClick() {
+      const statusBox = $('statusBox');
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-cyan-950/40 border border-cyan-800/40 text-cyan-200';
+      statusBox.innerText = 'Sincronizando parâmetros com o MOGRT selecionado na timeline...';
+
+      const params = getMogrtParamsPayload();
+      try {
+        const res = await fetch('/api/mogrts/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ params })
+        });
+        const result = await res.json();
+        if (result && result.success) {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
+          statusBox.innerText = `⚡ Sincronizado com sucesso!\nClipe: ${result.clipName || 'MOGRT'}\nPropriedades atualizadas: ${(result.updatedProperties || []).join(', ') || 'Texto/Cores'}`;
+        } else {
+          statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+          statusBox.innerText = `⚠️ Aviso: ${result.error || 'Nenhum MOGRT selecionado na timeline'}`;
+        }
+      } catch(e) {
+        statusBox.className = 'p-3.5 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+        statusBox.innerText = `❌ Erro: ${e.message}`;
+      }
+    }
+
+    /* ---------- Sequenciador de Legendas em Lote ---------- */
+    function openCaptionSequenceModal() {
+      const modal = $('captionSequenceModal');
+      const sel = $('seqTemplateSelect');
+      if (sel && (!sel.options.length || sel.options.length <= 1)) {
+        let opts = '';
+        for (const cKey in SUITES) {
+          opts += `<optgroup label="${esc(CAT_META[cKey].label)}">`;
+          SUITES[cKey].models.forEach(m => {
+            const val = `${cKey}/${m.id}`;
+            const isCurrent = (cKey === cat && m.id === sub);
+            opts += `<option value="${val}" ${isCurrent ? 'selected' : ''}>${esc(m.label)}</option>`;
+          });
+          opts += `</optgroup>`;
+        }
+        sel.innerHTML = opts;
+      }
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCaptionSequenceModal() {
+      const modal = $('captionSequenceModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function executeCaptionSequence() {
+      const textVal = $('seqPhrasesText').value.trim();
+      if (!textVal) {
+        alert('Por favor, digite ou cole as frases para a sequência.');
+        return;
+      }
+      const phrases = textVal.split('\n').map(l => l.trim()).filter(Boolean);
+      if (!phrases.length) return;
+
+      const btn = $('btnExecuteSequence');
+      const statusBox = $('seqStatusBox');
+      btn.disabled = true;
+      btn.innerText = 'Inserindo Sequência...';
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'p-3 rounded-xl text-xs font-mono whitespace-pre-wrap bg-amber-950/40 border border-amber-800/40 text-amber-200';
+      statusBox.innerText = `Processando ${phrases.length} frases MOGRT sequenciais na timeline...`;
+
+      const [selCat, selSub] = ($('seqTemplateSelect').value || 'text_anim/karaoke_bounce').split('/');
+      const durPerPhrase = parseFloat($('seqDurationPerPhrase').value) || 2.0;
+      const trackOffset = parseInt($('seqTrackOffset').value) || 1;
+
+      const payload = {
+        cat: selCat,
+        sub: selSub,
+        phrases: phrases,
+        durationPerPhrase: durPerPhrase,
+        videoTrackOffset: trackOffset
+      };
+
+      try {
+        const res = await fetch('/api/mogrts/sequence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result && result.success) {
+          statusBox.className = 'p-3 rounded-xl text-xs font-mono whitespace-pre-wrap bg-emerald-950/40 border border-emerald-800/40 text-emerald-200';
+          statusBox.innerText = `🎉 SUCESSO TOTAL!\n${result.insertedCount || phrases.length} clipes MOGRT de legendas foram inseridos sequencialmente na trilha V${trackOffset + 1} da timeline!\nTempo total da sequência: ${(phrases.length * durPerPhrase).toFixed(1)}s`;
+        } else {
+          statusBox.className = 'p-3 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+          statusBox.innerText = `❌ Falha: ${result.error || 'Erro ao inserir sequência'}`;
+        }
+      } catch(e) {
+        statusBox.className = 'p-3 rounded-xl text-xs font-mono whitespace-pre-wrap bg-rose-950/40 border border-rose-800/40 text-rose-200';
+        statusBox.innerText = `❌ Erro de comunicação: ${e.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡</span> Inserir Sequência na Timeline';
+      }
+    }
+
+    /* ---------- Catálogo & Navegador de MOGRTs ---------- */
+    let cachedCatalog = null;
+    let currentCatalogFilter = 'all';
+
+    async function openMogrtCatalogModal() {
+      const modal = $('mogrtCatalogModal');
+      if (modal) modal.classList.remove('hidden');
+      await loadAndRenderCatalog();
+    }
+
+    function closeMogrtCatalogModal() {
+      const modal = $('mogrtCatalogModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function loadAndRenderCatalog() {
+      if (!cachedCatalog) {
+        try {
+          const res = await fetch('/api/mogrts/catalog');
+          cachedCatalog = await res.json();
+        } catch(e){}
+      }
+      renderCatalogUI();
+    }
+
+    function renderCatalogUI() {
+      const tabsBox = $('catalogSuiteTabs');
+      const gridBox = $('catalogGrid');
+      const countBox = $('catalogCountText');
+
+      const suiteList = [
+        { key: 'all', label: 'Todos os 29 Templates' },
+        { key: 'text_anim', label: '⚡ Text Animation (8)' },
+        { key: 'viral', label: '🔥 Viral (4)' },
+        { key: 'hook', label: '🎣 Hooks (7)' },
+        { key: 'haute', label: '✨ Haute Couture (5)' },
+        { key: 'element', label: '🏷️ Elementos (5)' }
+      ];
+
+      tabsBox.innerHTML = suiteList.map(s => {
+        const act = s.key === currentCatalogFilter;
+        return `<button onclick="filterCatalogSuite('${s.key}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition ${act ? 'bg-[#FFD166] text-[#12040C] font-bold' : 'bg-[#1C0714] text-gray-400 hover:text-white border border-[#381126]'}">${s.label}</button>`;
+      }).join('');
+
+      const catalog = (cachedCatalog && cachedCatalog.catalog) || {};
+      let items = Object.values(catalog);
+      if (currentCatalogFilter !== 'all') {
+        items = items.filter(it => it.cat === currentCatalogFilter);
+      }
+
+      if (countBox) countBox.innerText = `${items.length} templates exibidos (Total: 29 MOGRTs)`;
+
+      gridBox.innerHTML = items.map(it => {
+        return `
+          <div class="bg-[#0E0308] border border-[#2B0E1E] hover:border-[#FF2E7E]/50 rounded-xl p-3.5 flex flex-col justify-between gap-3 transition">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#240A17] text-[#FFD166] border border-[#481530]">${esc(it.badge || it.cat)}</span>
+                <span class="text-[10px] text-gray-500 font-mono">MOGRT</span>
+              </div>
+              <h4 class="text-xs font-bold text-[#DFC89D] leading-snug">${esc(it.name)}</h4>
+              <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${esc(it.desc || '')}</p>
+              <div class="mt-2.5 p-2 rounded-lg bg-[#14050E] border border-[#260B1B] text-[11px] font-sans text-gray-300">
+                <span class="text-gray-500 text-[10px] block">Texto padrão:</span>
+                <div class="font-bold text-[#FAF6EE] truncate">${esc(it.line1 || '')} ${esc(it.line2 || '')}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2 border-t border-[#1F0715]">
+              <button onclick="selectCatalogModel('${it.cat}', '${it.sub}')" class="flex-1 py-1.5 px-2 rounded-lg bg-[#1C0714] hover:bg-[#2A0B1E] border border-[#381126] text-[11px] text-gray-300 hover:text-white transition">
+                Editar no Studio
+              </button>
+              <button onclick="insertCatalogDirect('${it.cat}', '${it.sub}')" class="py-1.5 px-3 rounded-lg bg-[#FFD166] hover:brightness-110 text-[#12040C] font-bold text-[11px] transition" title="Inserir agora no Premiere">
+                ⚡ Inserir
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCatalogSuite(s) {
+      currentCatalogFilter = s;
+      renderCatalogUI();
+    }
+
+    function selectCatalogModel(c, s) {
+      closeMogrtCatalogModal();
+      selectModel(c, s);
+    }
+
+    function insertCatalogDirect(c, s) {
+      closeMogrtCatalogModal();
+      selectModel(c, s);
+      setTimeout(() => {
+        handleInsertMogrtClick();
+      }, 100);
+    }
+
+    async function rebuildMogrtsFromServer() {
+      const countBox = $('catalogCountText');
+      if (countBox) countBox.innerText = 'Recompilando todos os 29 MOGRTs...';
+      try {
+        const res = await fetch('/api/mogrts/rebuild', { method: 'POST' });
+        cachedCatalog = await res.json();
+        renderCatalogUI();
+        alert('Todos os 29 arquivos .mogrt foram recompilados com sucesso!');
+      } catch(e) {
+        alert('Erro ao recompilar: ' + e.message);
+      }
+    }
+
+    /* ---------- OTA Auto-Update & Distribution ---------- */
+
+    let currentOtaCheck = null;
+
+    async function initOtaStatus() {
+      try {
+        const res = await fetch('/api/ota/status');
+        const data = await res.json();
+        if (data && data.version) {
+          const vText = `v${data.version} • 🔄 Auto-Update`;
+          if ($('otaVersionText')) $('otaVersionText').innerText = vText;
+          if ($('otaActiveVerLabel')) $('otaActiveVerLabel').innerText = `v${data.version}`;
+          if ($('otaBuildLabel')) $('otaBuildLabel').innerText = `(Build ${data.build || 2100})`;
+          if ($('inpRemoteUrl')) $('inpRemoteUrl').value = data.remoteManifestUrl || '';
+          if (data.lastChecked && $('otaCheckTimeText')) {
+            $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date(data.lastChecked).toLocaleTimeString();
+          }
+        }
+      } catch(e) {}
+    }
+
+    async function checkOtaUpdates(silent = false) {
+      const banner = $('otaBannerText');
+      const dot = $('otaBannerDot');
+      const actionArea = $('otaActionArea');
+      const changelog = $('otaChangelogText');
+
+      if (!silent && banner) banner.innerText = 'Buscando atualizações locais e remotas...';
+
+      try {
+        const res = await fetch('/api/ota/check');
+        const data = await res.json();
+        currentOtaCheck = data;
+
+        if ($('otaCheckTimeText')) $('otaCheckTimeText').innerText = 'Última checagem: ' + new Date().toLocaleTimeString();
+
+        if (data.updateAvailable) {
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+          if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+          if ($('otaVersionText')) $('otaVersionText').innerText = `v${data.latestVersion} Disponível! ⚡`;
+          if (banner) {
+            const srcStr = data.sourceType === 'local_drive' ? 'Disco Local / Google Drive' : 'Nuvem Remota';
+            banner.innerHTML = `<b class="text-[#FFD166]">Nova versão v${data.latestVersion} disponível!</b> (Fonte: ${srcStr})`;
+          }
+          if (changelog) {
+            changelog.innerText = data.releaseNotes || 'Melhorias de desempenho e novos recursos.';
+            changelog.classList.remove('hidden');
+          }
+          if (actionArea) actionArea.classList.remove('hidden');
+        } else {
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+          if ($('otaStatusDot')) $('otaStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
+          if (banner) banner.innerText = 'Você está com a versão mais recente instalada (' + (data.currentVersion ? 'v' + data.currentVersion : '') + ').';
+          if (changelog) changelog.classList.add('hidden');
+          if (actionArea) actionArea.classList.add('hidden');
+        }
+      } catch(e) {
+        if (banner) banner.innerText = 'Falha ao verificar atualizações: ' + e.message;
+      }
+    }
+
+    async function applyOtaUpdate() {
+      if (!confirm('Deseja aplicar a atualização agora? O Cherry Motion Studio será atualizado instantaneamente sem fechar o Premiere.')) return;
+      const btn = $('btnApplyUpdate');
+      const banner = $('otaBannerText');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Aplicando atualização...';
+      }
+      if (banner) banner.innerText = 'Baixando e gravando arquivos de atualização...';
+
+      try {
+        const payload = currentOtaCheck ? { sourcePath: currentOtaCheck.sourcePath } : {};
+        const res = await fetch('/api/ota/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          if (banner) banner.innerText = `Atualização para v${result.newVersion} concluída com sucesso! Recarregando...`;
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          alert('Erro ao atualizar: ' + (result.error || 'Desconhecido'));
+          if (btn) {
+            btn.disabled = false;
+            btn.innerText = 'Tentar Novamente';
+          }
+        }
+      } catch(e) {
+        alert('Erro de comunicação ao atualizar: ' + e.message);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = 'Tentar Novamente';
+        }
+      }
+    }
+
+    async function publishNewOtaVersion(bumpType) {
+      if (!confirm(`Deseja gerar a versão e assinar o pacote oficial .ZXP (+${bumpType})?`)) return;
+      const banner = $('otaBannerText');
+      if (banner) banner.innerText = `Compilando studio_bundle, assinando .ZXP e gerando OTA (+${bumpType})...`;
+
+      try {
+        const res = await fetch('/api/ota/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bump: bumpType })
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert(`🎉 Versão v${result.version} publicada e assinada com sucesso!\n\nArquivo .ZXP gerado em:\n${result.zxpPath}`);
+          initOtaStatus();
+          checkOtaUpdates(true);
+        } else {
+          alert('Erro ao publicar versão: ' + (result.error || 'Falha no build'));
+        }
+      } catch(e) {
+        alert('Erro ao chamar publicador: ' + e.message);
+      }
+    }
+
+    async function saveOtaConfig() {
+      const url = $('inpRemoteUrl').value.trim();
+      try {
+        const res = await fetch('/api/ota/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ remoteManifestUrl: url })
+        });
+        const r = await res.json();
+        if (r.success) {
+          alert('Configurações de atualização salvas com sucesso!');
+          checkOtaUpdates();
+        }
+      } catch(e) {
+        alert('Erro ao salvar configurações: ' + e.message);
+      }
+    }
+
+    function openOtaModal() {
+      $('otaModal').classList.remove('hidden');
+      checkOtaUpdates(true);
+    }
+    function closeOtaModal() {
+      $('otaModal').classList.add('hidden');
+    }
+
+    /* ---------- Init ---------- */
+
+    updateLabels();
+    initOtaStatus();
+    fetch('/api/presets').then(r => r.json()).then(serverPresets => {
+      if (serverPresets && typeof serverPresets === 'object' && Object.keys(serverPresets).length) {
+        store = Object.assign({}, serverPresets, store);
+        renderPanel();
+        E.preload(cat, sub, curCfg()).then(() => renderFrame(currentTime));
+      }
+    }).catch(() => {});
+    selectModel('viral', 'kinetic_slam');
+    checkPremiere();
+    checkSelectedClip();
+    loadRecentOutputs();
+    checkOtaUpdates(true);
+    setInterval(checkPremiere, 4000);
+    setInterval(checkSelectedClip, 1500);
+    setInterval(checkAutoReload, 2500);
+    setInterval(() => checkOtaUpdates(true), 300000);
+    requestAnimationFrame(loop);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderFrame(currentTime));
+  </script>
+</body>
+</html>
